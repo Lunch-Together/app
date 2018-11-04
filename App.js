@@ -1,21 +1,42 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { AppRegistry, View } from 'react-native';
+import Routes from './Routes.js'
 
-export default class App extends React.Component {
+
+class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+        <Routes />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// class Button extends React.Component {
+//   render() {
+//     return (
+//       <View style={styles.button}>
+//         <Text>카카오톡 로그인</Text>
+//       </View>
+//     )
+//   }
+// }
+
+
+export default App
+AppRegistry.registerComponent('App', () => App)
+
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   // button: {
+//   //   borderRadius: 5,
+//   //   borderWidth: 0.5,
+//   //   borderColor: '#d6d7da',
+//   // }
+// });
