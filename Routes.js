@@ -9,8 +9,8 @@ import Register from './src/components/Register'
 const Routes = () => (
   <Router>
     <Scene key="root">
-      <Scene key="login" component={Login} title="Login" initial={true}/>
-      <Scene key = "register" component = {Register} title = "Register" />
+      <Scene key="login" component={Login} title="로그인" initial={true}/>
+      <Scene key = "register" component = {Register} title = "회원가입"/>
     </Scene>
   </Router>
 )

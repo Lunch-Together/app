@@ -2,14 +2,15 @@
  * Created by uran on 04/11/2018.
  */
 import React from 'react'
-import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native'
 
 export default class AppButton extends React.Component {
   render() {
     return (
       <View {...this.props.style}>
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity="0.6">
           <View style={styles.button}>
+            <Image soruce={this.props.icon}/>
             <Text style={styles.buttonText}>{this.props.name}</Text>
           </View>
         </TouchableOpacity>
@@ -24,6 +25,7 @@ const styles = StyleSheet.create({
 
   },
   button: {
+    flexDirection: 'column',
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
