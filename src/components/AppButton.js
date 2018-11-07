@@ -9,9 +9,9 @@ export default class AppButton extends React.Component {
     return (
       <View {...this.props.style}>
         <TouchableOpacity activeOpacity="0.6">
-          <View style={styles.button}>
+          <View style={this.props.type === 'orange' ? styles.orangeBtn : styles.whiteButton}>
             <Image soruce={this.props.icon}/>
-            <Text style={styles.buttonText}>{this.props.name}</Text>
+            <Text style={this.props.type === 'orange' ? styles.orangeBtnText : styles.whiteButtonText}>{this.props.name}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -24,7 +24,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
 
   },
-  button: {
+  orangeBtn: {
+    backgroundColor: '#FC5B26',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 46,
+    borderColor: '#FC5B26',
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 14,
+  },
+
+  orangeBtnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
+  whiteButton: {
     flexDirection: 'column',
     backgroundColor: '#fff',
     justifyContent: 'center',
@@ -35,7 +51,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 14,
   },
-  buttonText: {
+  whiteButtonText: {
     color: '#676767',
   }
 });
