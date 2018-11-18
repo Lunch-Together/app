@@ -8,7 +8,7 @@ export default class AppButton extends React.Component {
   render() {
     return (
       <View {...this.props.style}>
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity activeOpacity={0.6} onPress={this.props.onPress}>
           <View style={this.props.type === 'orange' ? styles.orangeBtn : styles.whiteBtn}>
             <Image soruce={this.props.icon}/>
             <Text
