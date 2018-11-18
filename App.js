@@ -11,17 +11,6 @@ class App extends React.Component {
   }
 }
 
-// class Button extends React.Component {
-//   render() {
-//     return (
-//       <View style={styles.button}>
-//         <Text>카카오톡 로그인</Text>
-//       </View>
-//     )
-//   }
-// }
-
-
 export default App
 AppRegistry.registerComponent('App', () => App)
 

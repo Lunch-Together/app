@@ -2,7 +2,7 @@
  * Created by uran on 04/11/2018.
  */
 import React from 'react'
-import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity, View, Image, StyleSheet, Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AppButton from './AppButton'
 import TextButton from './TextButton'
@@ -18,6 +18,13 @@ const Login = () => {
       </View>
 
       <View style={{ flexGrow: 1, justifyContent: 'flex-end'}}>
+        <View>
+          <TouchableOpacity
+            onPress={()=>Alert.alert('경고창입니다')}
+          >
+            <Text>눌러라</Text>
+          </TouchableOpacity>
+        </View>
         <View>
           <AppButton
             name="카카오톡으로 시작하기"
@@ -72,9 +79,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 24,
   },
-  // buttonGroup: {
-  //   margin: 0,
-  // }
 });
 
 

@@ -9,9 +9,9 @@ export default class AppButton extends React.Component {
     return (
       <View {...this.props.style}>
         <TouchableOpacity activeOpacity="0.6">
-          <View style={this.props.type === 'orange' ? styles.orangeBtn : styles.whiteButton}>
+          <View style={this.props.type === 'orange' ? styles.orangeBtn : styles.whiteBtn}>
             <Image soruce={this.props.icon}/>
-            <Text style={this.props.type === 'orange' ? styles.orangeBtnText : styles.whiteButtonText}>{this.props.name}</Text>
+            <Text style={this.props.type === 'orange' ? styles.orangeBtnText : styles.whiteBtnText}>{this.props.name}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  whiteButton: {
+  whiteBtn: {
     flexDirection: 'column',
     backgroundColor: '#fff',
     justifyContent: 'center',
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 14,
   },
-  whiteButtonText: {
+  whiteBtnText: {
     color: '#676767',
   }
 });
