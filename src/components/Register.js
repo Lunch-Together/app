@@ -4,6 +4,7 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import AppButton from './AppButton'
+import * as UserApi from '../api/users'
 
 export default class Register extends React.Component {
 
@@ -31,15 +32,24 @@ export default class Register extends React.Component {
         <View style={styles.inputWrapper}>
           <Text style={styles.title}>닉네임</Text>
           <TextInput
-
             style={styles.input}
-            placeholder="닉네임을 입력하세요."
-          />
+            placeholder="닉네임을 입력하세요."/>
         </View>
 
-        <AppButton name="회원가입" type={'orange'}/>
+        <AppButton name="회원가입" type={'orange'} onPress={this.postUser}/>
       </View>
     </View>
+  }
+
+  async postUser() {
+    console.log('request post user');
+
+    try {
+      const data = await UserApi.postUser();
+      console.log(`Result : ${data}`)
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 
