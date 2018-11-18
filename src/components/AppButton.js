@@ -2,16 +2,17 @@
  * Created by uran on 04/11/2018.
  */
 import React from 'react'
-import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class AppButton extends React.Component {
   render() {
     return (
       <View {...this.props.style}>
-        <TouchableOpacity activeOpacity="0.6">
+        <TouchableOpacity activeOpacity={0.6}>
           <View style={this.props.type === 'orange' ? styles.orangeBtn : styles.whiteBtn}>
             <Image soruce={this.props.icon}/>
-            <Text style={this.props.type === 'orange' ? styles.orangeBtnText : styles.whiteBtnText}>{this.props.name}</Text>
+            <Text
+              style={this.props.type === 'orange' ? styles.orangeBtnText : styles.whiteBtnText}>{this.props.name}</Text>
           </View>
         </TouchableOpacity>
       </View>
