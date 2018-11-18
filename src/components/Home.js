@@ -8,6 +8,10 @@ import AppButton from './AppButton'
 import TextButton from './TextButton'
 
 const Home = () => {
+  const goOrder = () => {
+    Actions.order()
+  }
+
   return (
     <View style={styles.container}>
       <View style={{flexGrow: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -17,7 +21,12 @@ const Home = () => {
         <Text style={styles.title}>QR 코드를 찍어</Text>
         <Text style={styles.sub}>현재 매장의 메뉴를 확인해보세요!</Text>
 
-        <AppButton name="카메라 실행" type={'orange'} style={{width: 180, marginTop: 50}}/>
+        <AppButton
+          name="카메라 실행"
+          type={'orange'}
+          style={{width: 180, marginTop: 50}}
+        />
+
       </View>
 
     </View>
