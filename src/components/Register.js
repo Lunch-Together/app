@@ -2,32 +2,29 @@
  * Created by uran on 04/11/2018.
  */
 import React from 'react'
-import { TouchableOpacity, Text, View, TextInput, StyleSheet } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import AppButton from './AppButton'
 
+export default class Register extends React.Component {
 
-const Register = () => {
-  const goLogin = () => {
-    Actions.login()
-  }
-
-  return (
-    <View style={styles.container}>
+  render() {
+    return <View style={styles.container}>
       <View style={styles.inputWrapper}>
         <View style={styles.inputWrapper}>
           <Text style={styles.title}>이메일 주소</Text>
           <TextInput
             style={styles.input}
             placeholder="이메일 주소를 입력하세요."
-          />
+            autoCapitalize='none'
+            textContentType='username'/>
           <Text></Text>
         </View>
         <View style={styles.inputWrapper}>
           <Text style={styles.title}>비밀번호</Text>
           <TextInput
-
             style={styles.input}
+            textContentType='password'
+            secureTextEntry={true}
             placeholder="비밀번호를 입력하세요."
           />
         </View>
@@ -40,12 +37,11 @@ const Register = () => {
           />
         </View>
 
-        <AppButton name="회원가입" type={'orange'} />
+        <AppButton name="회원가입" type={'orange'}/>
       </View>
     </View>
-  )
+  }
 }
-
 
 
 const styles = StyleSheet.create({
@@ -67,5 +63,3 @@ const styles = StyleSheet.create({
     borderColor: '#DBDFE3',
   },
 });
-
-export default Register
