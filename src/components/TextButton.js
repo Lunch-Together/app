@@ -4,13 +4,13 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default class AppButton extends React.Component {
+export default class TextButton extends React.Component {
   render() {
     return (
       <View {...this.props.style} style={styles.container}>
-        <TouchableOpacity onPress={ this.props.onPress } activeOpacity={0.6}>
+        <TouchableOpacity onPress={this.props.onPress} activeOpacity={0.6}>
           <View>
-            <Text style={{color: '#ABAEB6'}}>{this.props.name}</Text>
+            <Text style={{ color: '#ABAEB6' }}>{this.props.name}</Text>
           </View>
         </TouchableOpacity>
       </View>
