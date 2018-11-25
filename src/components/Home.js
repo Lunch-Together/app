@@ -2,38 +2,39 @@
  * Created by uran on 07/11/2018.
  */
 import React from 'react'
-import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import AppButton from './AppButton'
-import TextButton from './TextButton'
+import { Actions } from "react-native-router-flux";
 
-const Home = () => {
-  const goOrder = () => {
-    Actions.order()
+export default class Home extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Image source={require('../img/img_qr.png')}/>
+        </View>
+        <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={styles.title}>QR 코드를 찍어</Text>
+          <Text style={styles.sub}>현재 매장의 메뉴를 확인해보세요!</Text>
+
+          <AppButton
+            onPress={this.goOrder.bind(this)}
+            name="카메라 실행"
+            type={'orange'}
+            style={{ width: 180, marginTop: 50 }}
+          />
+
+        </View>
+
+      </View>
+    )
   }
 
-  return (
-    <View style={styles.container}>
-      <View style={{flexGrow: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Image source={require('../img/img_qr.png') } />
-      </View>
-      <View style={{flexGrow: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={styles.title}>QR 코드를 찍어</Text>
-        <Text style={styles.sub}>현재 매장의 메뉴를 확인해보세요!</Text>
-
-        <AppButton
-          name="카메라 실행"
-          type={'orange'}
-          style={{width: 180, marginTop: 50}}
-        />
-
-      </View>
-
-    </View>
-  )
+  async goOrder() {
+    // TODO 여기는 구현 되어야함
+    Actions.reset('order')
+  }
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -52,7 +53,3 @@ const styles = StyleSheet.create({
     marginTop: 5,
   }
 });
-
-
-
-export default Home
