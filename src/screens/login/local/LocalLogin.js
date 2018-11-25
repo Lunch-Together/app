@@ -1,9 +1,9 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AppButton from '@components/AppButton'
 import { postLogin } from "../../../api/login";
 import { SecureStore } from 'expo'
+import AppButton from "../../../components/button/AppButton";
 
 export default class LocalLogin extends React.Component {
 
