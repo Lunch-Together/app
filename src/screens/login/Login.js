@@ -2,7 +2,7 @@
  * 이메일 로그인, 소셜 로그인, 회원가입 등의 작업을 할 수 있는 페이지
  */
 import React from 'react'
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import AppButton from '../../components/button/AppButton'
 import TextButton from '../../components/button/TextButton'
 import { Actions } from "react-native-router-flux";
@@ -22,11 +22,6 @@ export default class Login extends React.Component {
         </View>
 
         <View style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
-          <View>
-            <TouchableOpacity onPress={() => Alert.alert('경고창입니다')}>
-              <Text>눌러라</Text>
-            </TouchableOpacity>
-          </View>
           <View>
             <AppButton
               name="카카오톡으로 시작하기"
