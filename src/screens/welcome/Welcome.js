@@ -8,6 +8,7 @@ import React from 'react'
 import { View } from "react-native";
 import { SecureStore } from 'expo'
 import { Actions } from "react-native-router-flux";
+import * as MeApi from '../../api/me'
 
 export default class Welcome extends React.Component {
 
@@ -21,7 +22,21 @@ export default class Welcome extends React.Component {
     }
 
     // Token있을경우 테이블 참석 여부 등을 확인하여 페이지 이동
-    Actions.replace('home')
+    const meGroupResponse = await MeApi.getMeGroup();
+
+    // 만약 그룹 정보가 없을 경우
+    if (meGroupResponse.ok !== true) {
+      if (meGroupResponse.status === 404) {
+        // 유저가 그룹에 속해 있지 않을때 QR Code 스캔 페이지로 이동
+        Actions.replace('qrScan')
+      } else {
+        // 그 외의 에러도 이동
+        Actions.replace('qrScan')
+      }
+    } else {
+      // 유저가 그룹에 속해 있을떄 페이지 이동
+      Actions.replace('order')
+    }
   }
 
   render() {
