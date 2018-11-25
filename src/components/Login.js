@@ -11,6 +11,10 @@ const Login = () => {
   const goToRegister = () => {
     Actions.register()
   };
+
+  const goToEmailLogin = () => {
+    Actions.localLogin()
+  };
   return (
     <View style={styles.container}>
       <View style={{ flexGrow: 3, alignItems: 'center', justifyContent: 'center' }}>
@@ -43,6 +47,7 @@ const Login = () => {
           <View style={{ height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <TextButton
               name="이메일 로그인"
+              onPress={goToEmailLogin}
               style={{
                 paddingRight: 7,
                 borderRightWidth: 2,
