@@ -3,8 +3,8 @@
  */
 import React from 'react'
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import AppButton from './AppButton'
-import TextButton from './TextButton'
+import AppButton from '../../components/button/AppButton'
+import TextButton from '../../components/button/TextButton'
 import { Actions } from "react-native-router-flux";
 import { SecureStore } from 'expo'
 
@@ -18,7 +18,7 @@ export default class Login extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ flexGrow: 3, alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={require('../img/img_main_logo.png')}/>
+          <Image source={require('../../img/img_main_logo.png')}/>
         </View>
 
         <View style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
@@ -30,16 +30,16 @@ export default class Login extends React.Component {
           <View>
             <AppButton
               name="카카오톡으로 시작하기"
-              icon={require('../img/ic_kako.png')}
+              icon={require('../../img/ic_kako.png')}
               style={{ marginBottom: 7 }}/>
 
             <AppButton
               name="페이스북으로 시작하기"
-              icon={require('../img/ic_facebook.png')}
+              icon={require('../../img/ic_facebook.png')}
               style={{ marginBottom: 7 }}/>
             <AppButton
               name="Gmail로 시작하기"
-              icon={require('../img/ic_google.png')}
+              icon={require('../../img/ic_google.png')}
               style={{ marginBottom: 7 }}/>
           </View>
 
