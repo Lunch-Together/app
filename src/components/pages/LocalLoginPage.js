@@ -1,14 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AppButton from '@components/AppButton'
-
-const goHome = () => {
-  Actions.home()
-};
-
+import { postLogin } from "../../api/login";
+import { SecureStore } from 'expo'
 
 export default class LocalLoginPage extends React.Component {
+
+  state = {
+    username: null,
+    password: null
+  };
 
   componentWillMount() {
   }
@@ -22,7 +24,8 @@ export default class LocalLoginPage extends React.Component {
             style={styles.input}
             placeholder="이메일 주소를 입력하세요."
             autoCapitalize='none'
-            />
+            onChangeText={(value) => this.setState({ username: value })}
+          />
           <Text></Text>
         </View>
         <View style={styles.inputWrapper}>
@@ -30,17 +33,36 @@ export default class LocalLoginPage extends React.Component {
           <TextInput
             style={styles.input}
             textContentType='password'
+            secureTextEntry={true}
             placeholder="비밀번호를 입력하세요."
+            onChangeText={(value) => this.setState({ password: value })}
           />
         </View>
         <AppButton
           name="로그인"
           type={'orange'}
-          onPress={goHome}
+          onPress={this.login.bind(this)}
         />
       </View>
     </View>
   }
+
+  async login() {
+    const response = await postLogin(this.state.username, this.state.password);
+    if (response.ok !== true) {
+      return Alert.alert('알림', '로그인에 실패하였습니다')
+    } else {
+      const { data } = await response.json();
+      const { token } = data;
+      await SecureStore.setItemAsync('token', token);
+
+      Actions.reset('home')
+    }
+  }
+
+  goHome = () => {
+    Actions.home()
+  };
 }
 
 const styles = StyleSheet.create({
