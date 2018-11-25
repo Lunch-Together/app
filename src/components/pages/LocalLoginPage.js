@@ -3,7 +3,15 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Actions } from 'react-native-router-flux'
 import AppButton from '@components/AppButton'
 
+const goHome = () => {
+  Actions.home()
+};
+
+
 export default class LocalLoginPage extends React.Component {
+
+  componentWillMount() {
+  }
 
   render() {
     return <View style={styles.container}>
@@ -25,7 +33,11 @@ export default class LocalLoginPage extends React.Component {
             placeholder="비밀번호를 입력하세요."
           />
         </View>
-        <AppButton name="로그인" type={'orange'}/>
+        <AppButton
+          name="로그인"
+          type={'orange'}
+          onPress={goHome}
+        />
       </View>
     </View>
   }
