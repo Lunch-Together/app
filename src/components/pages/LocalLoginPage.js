@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AppButton from '../AppButton'
+import AppButton from '@components/AppButton'
 
 export default class LocalLoginPage extends React.Component {
 
