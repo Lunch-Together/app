@@ -2,7 +2,7 @@
  * Created by uran on 04/11/2018.
  */
 import React from 'react'
-import { Text, TouchableOpacity, View, Image, StyleSheet, Alert } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AppButton from './AppButton'
 import TextButton from './TextButton'
@@ -10,18 +10,16 @@ import TextButton from './TextButton'
 const Login = () => {
   const goToRegister = () => {
     Actions.register()
-  }
+  };
   return (
     <View style={styles.container}>
-      <View style={{flexGrow: 3, alignItems: 'center', justifyContent: 'center'}}>
-        <Image source={require('../img/img_main_logo.png') } />
+      <View style={{ flexGrow: 3, alignItems: 'center', justifyContent: 'center' }}>
+        <Image source={require('../img/img_main_logo.png')}/>
       </View>
 
-      <View style={{ flexGrow: 1, justifyContent: 'flex-end'}}>
+      <View style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
         <View>
-          <TouchableOpacity
-            onPress={()=>Alert.alert('경고창입니다')}
-          >
+          <TouchableOpacity onPress={() => Alert.alert('경고창입니다')}>
             <Text>눌러라</Text>
           </TouchableOpacity>
         </View>
@@ -29,23 +27,20 @@ const Login = () => {
           <AppButton
             name="카카오톡으로 시작하기"
             icon={require('../img/ic_kako.png')}
-            style={{ marginBottom: 7 }}
-          />
+            style={{ marginBottom: 7 }}/>
 
           <AppButton
             name="페이스북으로 시작하기"
             icon={require('../img/ic_facebook.png')}
-            style={{ marginBottom: 7 }}
-          />
+            style={{ marginBottom: 7 }}/>
           <AppButton
             name="Gmail로 시작하기"
             icon={require('../img/ic_google.png')}
-            style={{ marginBottom: 7 }}
-          />
+            style={{ marginBottom: 7 }}/>
         </View>
 
         <View>
-          <View style={{height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <TextButton
               name="이메일 로그인"
               style={{
@@ -61,16 +56,14 @@ const Login = () => {
                 borderRightWidth: 2,
                 borderColor: '#E9E9E9',
               }}/>
-            />
-            <TextButton name="회원가입" onPress = {goToRegister}/>
+            <TextButton name="회원가입" onPress={goToRegister}/>
           </View>
         </View>
       </View>
 
     </View>
   )
-}
-
+};
 
 
 const styles = StyleSheet.create({
@@ -80,7 +73,6 @@ const styles = StyleSheet.create({
     padding: 24,
   },
 });
-
 
 
 export default Login
