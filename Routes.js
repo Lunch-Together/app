@@ -9,11 +9,13 @@ import Home from './src/screens/home/Home'
 import Order from './src/screens/order/Order'
 import QRScanner from "./src/screens/scanner/QRScanner";
 import LocalLogin from "./src/screens/login/local/LocalLogin";
+import Welcome from "./src/screens/welcome/Welcome";
 
 const Routes = () => (
   <Router>
     <Scene key="root">
-      <Scene key="login" component={Login} title="로그인" initial={true}/>
+      <Scene key="welcome" component={Welcome} title="welcome" initial={true} hideNavBar={true}/>
+      <Scene key="login" component={Login} title="로그인"/>
       <Scene key="register" component={Register} title="회원가입"/>
       <Scene key="home" component={Home} title="런치투게더" type={ActionConst.RESET}/>
       <Scene key="order" component={Order} title="런치투게더"/>
