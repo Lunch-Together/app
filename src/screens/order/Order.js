@@ -10,6 +10,7 @@ import MenuList from "./MenuList";
 import UserProfileListItem from "../../components/order/profile/UserProfileListItem";
 import * as meApi from "../../api/me"
 import * as groupApi from "../../api/groups"
+import * as shopApi from "../../api/shop"
 
 export default class Order extends React.Component {
 
@@ -21,10 +22,10 @@ export default class Order extends React.Component {
       { key: 'third', title: '주류' }
     ],
     users: [
-      { key: '1', nickname: '가' },
-      { key: '2', nickname: '나' },
-      { key: '3', nickname: '다' },
-      { key: '4', nickname: '라' }
+      { key: '1', User: { nickname: '가' }, role: 'leader' },
+      { key: '2', User: { nickname: '나' }, role: 'member' },
+      { key: '3', User: { nickname: '다' }, role: 'member' },
+      { key: '4', User: { nickname: '라' }, role: 'member' },
     ]
   };
 
@@ -52,8 +53,25 @@ export default class Order extends React.Component {
 
     // 내가 참여하고 있는 그룹 상세 정보
     const group = await groupResponse.json();
+    const { Table, GroupMembers } = group.data;
+    const { ShopId } = Table;
 
-    console.log(`My Group Id IS : ${JSON.stringify(group, null, 2)}`)
+    // 상점 메뉴 정보
+    const shopMenusResponse = await shopApi.getShopMenus(ShopId);
+    if (shopMenusResponse.ok !== true) {
+      Alert.alert('알림', '메뉴 정보를 가져오지 못했습니다');
+      return
+    }
+
+    const shopMenus = await shopMenusResponse.json();
+    console.log(JSON.stringify(shopMenus));
+
+    // 그룹 정보 적용
+    this.setState({
+      users: GroupMembers.map(item => {
+        return { key: `${item.id}`, ...item }
+      })
+    });
   }
 
   render() {
@@ -62,6 +80,7 @@ export default class Order extends React.Component {
         {/* 멤버 정보와 결제 금액 정보가 나와있는 뷰 */}
         <View style={styles.sectionHeader}>
           <FlatList
+            extraData={this.state}
             data={this.state.users}
             renderItem={({ item }) => <UserProfileListItem user={item}/>}
             horizontal={true}>

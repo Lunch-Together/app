@@ -9,7 +9,8 @@ export default class UserProfileListItem extends React.Component {
   render() {
     return (
       <View>
-        <Text style={styles.nickname}>{this.props.user.nickname}</Text>
+        <Text style={styles.nickname}>{this.props.user.User.nickname}</Text>
+        <Text style={styles.nickname}>{this.props.user.role}</Text>
       </View>)
   }
 }
