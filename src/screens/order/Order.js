@@ -8,6 +8,8 @@ import { Dimensions, FlatList, StyleSheet, View } from 'react-native'
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import MenuList from "./MenuList";
 import UserProfileListItem from "../../components/order/profile/UserProfileListItem";
+import * as meApi from "../../api/me"
+import * as groupApi from "../../api/groups"
 
 export default class Order extends React.Component {
 
@@ -25,6 +27,34 @@ export default class Order extends React.Component {
       { key: '4', nickname: '라' }
     ]
   };
+
+  async componentDidMount() {
+    // 현재 로그인한 유저의 그룹 정보를 요청하고
+    // 멤버 정보와, 메뉴 정보를 업데이트 한다
+    const meGroupResponse = await meApi.getMeGroup();
+    if (meGroupResponse.ok !== true) {
+      Alert.alert('알림', '그룹에 참여하지 않은 계정 입니다');
+      return
+    }
+
+    // Me 에서 요청한 내 그룹 정보
+    const meGroup = await meGroupResponse.json();
+
+    // 그룹 아이디
+    const groupId = meGroup.data.id;
+
+    // 그룹 상세 정보 요청
+    const groupResponse = await groupApi.getGroup(groupId);
+    if (groupResponse.ok !== true) {
+      Alert.alert('알림', '그룹 정보를 가져오지 못했습니다');
+      return
+    }
+
+    // 내가 참여하고 있는 그룹 상세 정보
+    const group = await groupResponse.json();
+
+    console.log(`My Group Id IS : ${JSON.stringify(group, null, 2)}`)
+  }
 
   render() {
     return (
