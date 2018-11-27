@@ -3,13 +3,13 @@
  */
 import React from 'react'
 import { ActionConst, Router, Scene } from 'react-native-router-flux'
-import Login from './src/components/login/Login.js'
-import Register from './src/components/register/Register'
-import Home from './src/components/home/Home'
-import Order from './src/components/order/Order'
-import QRScanner from "./src/components/scanner/QRScanner";
-import LocalLogin from "./src/components/login/local/LocalLogin";
-import Welcome from "./src/components/welcome/Welcome";
+import Login from './login/Login.js'
+import Register from './register/Register'
+import Home from './home/Home'
+import Order from './order/Order'
+import QRScanner from "./scanner/QRScanner";
+import LocalLogin from "./login/local/LocalLogin";
+import Welcome from "./welcome/Welcome";
 
 const Routes = () => (
   <Router>
