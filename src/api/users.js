@@ -1,4 +1,4 @@
-import { URL } from '@api/constants'
+import { URL } from '../api/constants'
 
 export const postUser = async (username, password, nickname) => {
   return await fetch(`${URL}/users`, {

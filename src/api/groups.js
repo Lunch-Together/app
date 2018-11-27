@@ -1,6 +1,6 @@
 'use strict';
 
-import { URL } from '@api/constants'
+import { URL } from '../api/constants'
 import { getAccessToken } from "./constants";
 
 export const createGroup = async (tableId) => {
