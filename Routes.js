@@ -6,7 +6,7 @@ import { ActionConst, Router, Scene } from 'react-native-router-flux'
 import Login from './src/components/login/Login.js'
 import Register from './src/components/register/Register'
 import Home from './src/components/home/Home'
-import Order from './src/components/order/profile/Order'
+import Order from './src/components/order/Order'
 import QRScanner from "./src/components/scanner/QRScanner";
 import LocalLogin from "./src/components/login/local/LocalLogin";
 import Welcome from "./src/components/welcome/Welcome";
