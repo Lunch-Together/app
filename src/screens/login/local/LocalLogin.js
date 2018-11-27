@@ -24,9 +24,7 @@ export default class LocalLogin extends React.Component {
             style={styles.input}
             placeholder="이메일 주소를 입력하세요."
             autoCapitalize='none'
-            onChangeText={(value) => this.setState({ username: value })}
-          />
-          <Text></Text>
+            onChangeText={(value) => this.setState({ username: value })}/>
         </View>
         <View style={styles.inputWrapper}>
           <Text style={styles.title}>비밀번호</Text>
