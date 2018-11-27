@@ -3,8 +3,8 @@
  *
  * 테이블에 추가된 유저가 메뉴를 주문하고 데이터를 보는 화면
  */
-import React from 'react'
-import { Dimensions, FlatList, StyleSheet, View } from 'react-native'
+import React, { Component } from 'react'
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import { TabBar, TabView } from 'react-native-tab-view';
 import UserProfileListItem from "../../components/order/profile/UserProfileListItem";
 import * as meApi from "../../api/me"
@@ -14,21 +14,12 @@ import SocketIOClient from 'socket.io-client'
 import { getAccessToken, URL } from '../../api/constants'
 import MenuList from "./MenuList";
 
-export default class Order extends React.Component {
+export default class Order extends Component {
 
   state = {
     index: 0,
-    routes: [
-      { key: 'first', title: '분식' },
-      { key: 'second', title: '식사' },
-      { key: 'third', title: '주류' }
-    ],
-    users: [
-      { key: '1', User: { nickname: '가' }, role: 'leader' },
-      { key: '2', User: { nickname: '나' }, role: 'member' },
-      { key: '3', User: { nickname: '다' }, role: 'member' },
-      { key: '4', User: { nickname: '라' }, role: 'member' },
-    ]
+    routes: [{ key: 'dummy' }],
+    orders: []
   };
 
   constructor(props) {
@@ -72,7 +63,18 @@ export default class Order extends React.Component {
       return
     }
 
+    // 상점의 메뉴 데이터
     const shopMenus = await shopMenusResponse.json();
+
+    // 해당 그룹에서 주문한 항목들 리스트
+    const ordersResponse = await groupApi.getGroupOrders(groupId);
+    if (ordersResponse.ok !== true) {
+      Alert.alert('알림', '그룹의 주문 정보를 가져오지 못했습니다');
+      return
+    }
+
+    // 그룹의 주문 정보
+    const orders = await ordersResponse.json();
 
     // 그룹 정보 적용
     this.setState({
@@ -82,7 +84,8 @@ export default class Order extends React.Component {
       menus: shopMenus.data,
       routes: shopMenus.data.map(category => {
         return { key: `${category.id}`, title: category.name }
-      })
+      }),
+      orders: orders.data
     });
 
     // 소켓 연결
@@ -97,11 +100,13 @@ export default class Order extends React.Component {
           <FlatList
             extraData={this.state}
             data={this.state.users}
-            renderItem={({ item }) => <UserProfileListItem user={item}/>}
+            renderItem={({ item }) => <UserProfileListItem member={item}/>}
             horizontal={true}>
           </FlatList>
         </View>
-        <View style={styles.priceGroup}/>
+        <View style={styles.priceGroup}>
+          <Text>{this._orderTotalPrice()}</Text>
+        </View>
         {/* 메뉴 정보 */}
         <TabView
           navigationState={this.state}
@@ -115,6 +120,13 @@ export default class Order extends React.Component {
     )
   }
 
+  /**
+   * TavView 탭 정보를 렌더링 하는 함수
+   * (메뉴 카테고리 정보)
+   * @param props
+   * @returns {*}
+   * @private
+   */
   _renderTabBar(props) {
     return (
       <TabBar
@@ -128,6 +140,14 @@ export default class Order extends React.Component {
     )
   }
 
+  /**
+   * TabView 하단에 보여지는 화면을 렌더링 하는 함수
+   * (메뉴 리스트)
+   *
+   * @param route
+   * @returns {*}
+   * @private
+   */
   _renderScene = ({ route }) => {
     if (this.state.routes.indexOf(route) !== this.state.index || !this.state.menus) {
       return <View/>;
@@ -141,6 +161,14 @@ export default class Order extends React.Component {
     return <MenuList menus={menu.Menus}/>
   };
 
+  /**
+   * 그룹 아이디를 가지고 Socket 에 Join 요청을 하고
+   * 주문에 필요한 모든 socket event 들을 등록한다
+   *
+   * @param groupId
+   * @returns {Promise<void>}
+   * @private
+   */
   async _connectAndRegisterSocket(groupId) {
     const token = await getAccessToken();
 
@@ -160,8 +188,30 @@ export default class Order extends React.Component {
       this.setState(this.state);
     });
 
+    // 새로운 주문이 그룹에 추가 되었을때
+    this.socket.on('new-order', (order) => {
+      this.state.orders.push(order.data);
+      this.setState({ orders: this.state.orders })
+    });
+
     // 방에 접속하면 조인을 요청한다
     this.socket.emit('join-group', { token, groupId });
+  }
+
+  /**
+   * 현재 그룹에서 주문한 총 금액 데이터를 반환한다
+   *
+   * @returns {*}
+   * @private
+   */
+  _orderTotalPrice() {
+    if (this.state.orders) {
+      return this.state.orders
+        .map(order => order.Menu.price)
+        .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+    } else {
+      return 0
+    }
   }
 }
 
