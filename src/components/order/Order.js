@@ -194,6 +194,16 @@ export default class Order extends Component {
       this.setState({ orders: this.state.orders })
     });
 
+    // 그룹에 상태가 변경 되었을때 (주문중, 결제요청, 완료)
+    this.socket.on('update-group-states', (states) => {
+      console.log(`Change States : ${states.data}`);
+    });
+
+    // 그룹에 결제 방법이 변경 되었을때
+    this.socket.on('update-group-paymentType', (paymentType) => {
+      console.log(`Change States : ${paymentType.data}`);
+    });
+
     // 방에 접속하면 조인을 요청한다
     this.socket.emit('join-group', { token, groupId });
   }
