@@ -12,9 +12,6 @@ export default class LocalLogin extends React.Component {
     password: null
   };
 
-  componentWillMount() {
-  }
-
   render() {
     return <View style={styles.container}>
       <View style={styles.inputWrapper}>
@@ -54,13 +51,10 @@ export default class LocalLogin extends React.Component {
       const { token } = data;
       await SecureStore.setItemAsync('token', token);
 
-      Actions.reset('home')
+      // Welcome 페이지로 이동시켜 다시 옳바른 페이지로 이동할 수 있도록 한다
+      Actions.reset('welcome')
     }
   }
-
-  goHome = () => {
-    Actions.home()
-  };
 }
 
 const styles = StyleSheet.create({
