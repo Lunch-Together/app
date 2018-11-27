@@ -28,10 +28,10 @@ export default class Welcome extends React.Component {
     if (meGroupResponse.ok !== true) {
       if (meGroupResponse.status === 404) {
         // 유저가 그룹에 속해 있지 않을때 QR Code 스캔 페이지로 이동
-        Actions.replace('qrScan')
+        Actions.replace('home')
       } else {
         // 그 외의 에러도 이동
-        Actions.replace('qrScan')
+        Actions.replace('home')
       }
     } else {
       // 유저가 그룹에 속해 있을떄 페이지 이동

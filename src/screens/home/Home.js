@@ -18,21 +18,14 @@ export default class Home extends React.Component {
           <Text style={styles.sub}>현재 매장의 메뉴를 확인해보세요!</Text>
 
           <AppButton
-            onPress={this.goOrder.bind(this)}
+            onPress={Actions.qrScan}
             name="카메라 실행"
             type={'orange'}
             style={{ width: 180, marginTop: 50 }}
           />
-
         </View>
-
       </View>
     )
-  }
-
-  async goOrder() {
-    // TODO 여기는 구현 되어야함
-    Actions.reset('order')
   }
 }
 
