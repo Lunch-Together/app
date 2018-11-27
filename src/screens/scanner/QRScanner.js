@@ -93,7 +93,7 @@ export default class QRScanner extends React.Component {
           this.setState({ isScanned: false });
         } else {
           // 그룹 조인에 성공 하면 Welcome 페이지로 넘겨준다
-          Actions.replace('welcome')
+          Actions.reset('welcome')
         }
       }
     }
