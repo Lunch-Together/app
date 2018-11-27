@@ -11,6 +11,8 @@ import UserProfileListItem from "../../components/order/profile/UserProfileListI
 import * as meApi from "../../api/me"
 import * as groupApi from "../../api/groups"
 import * as shopApi from "../../api/shop"
+import SocketIOClient from 'socket.io-client'
+import { getAccessToken, URL } from '../../api/constants'
 
 export default class Order extends React.Component {
 
@@ -28,6 +30,13 @@ export default class Order extends React.Component {
       { key: '4', User: { nickname: '라' }, role: 'member' },
     ]
   };
+
+  constructor(props) {
+    super(props);
+
+    // 소켓 생성
+    this.socket = SocketIOClient(URL);
+  }
 
   async componentDidMount() {
     // 현재 로그인한 유저의 그룹 정보를 요청하고
@@ -64,7 +73,7 @@ export default class Order extends React.Component {
     }
 
     const shopMenus = await shopMenusResponse.json();
-    console.log(JSON.stringify(shopMenus));
+    console.log(JSON.stringify(shopMenus.data));
 
     // 그룹 정보 적용
     this.setState({
@@ -72,6 +81,9 @@ export default class Order extends React.Component {
         return { key: `${item.id}`, ...item }
       })
     });
+
+    // 소켓 연결
+    await this._connectAndRegisterSocket(groupId);
   }
 
   render() {
@@ -116,6 +128,29 @@ export default class Order extends React.Component {
         labelStyle={styles.label}
       />
     )
+  }
+
+  async _connectAndRegisterSocket(groupId) {
+    const token = await getAccessToken();
+
+    // 그룹 조인 성공 여부가 넘어온다
+    this.socket.on('join-group-result', (message) => {
+      // TODO 실패 여부에 따른 처리
+    });
+
+    // 멤버가 소켓에 연결 되었을때
+    this.socket.on('connect-member', (member) => {
+      console.log('멤버 접속', member)
+    });
+
+    // 새로운 멤버가 그룹에 추가 되었을때
+    this.socket.on('new-group-member', (member) => {
+      this.state.users.push(Object.assign({}, member.data, { key: `${member.data.id}` }));
+      this.setState(this.state);
+    });
+
+    // 방에 접속하면 조인을 요청한다
+    this.socket.emit('join-group', { token, groupId });
   }
 }
 
