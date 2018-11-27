@@ -2,8 +2,7 @@
  * Created by uran on 07/11/2018.
  */
 import React from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-
+import { StyleSheet, View } from 'react-native'
 
 export default class Form extends React.Component {
   componentWillMount() {
@@ -15,7 +14,7 @@ export default class Form extends React.Component {
   render() {
     return (
       <View></View>
-      )
+    )
   }
 }
 

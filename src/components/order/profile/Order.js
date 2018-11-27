@@ -6,13 +6,13 @@
 import React, { Component } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import { TabBar, TabView } from 'react-native-tab-view';
-import UserProfileListItem from "../../components/order/profile/UserProfileListItem";
-import * as meApi from "../../api/me"
-import * as groupApi from "../../api/groups"
-import * as shopApi from "../../api/shop"
+import UserProfileListItem from "./UserProfileListItem";
+import * as meApi from "../../../api/me"
+import * as groupApi from "../../../api/groups"
+import * as shopApi from "../../../api/shop"
 import SocketIOClient from 'socket.io-client'
-import { getAccessToken, URL } from '../../api/constants'
-import MenuList from "./MenuList";
+import { getAccessToken, URL } from '../../../api/constants'
+import MenuList from "../menu/MenuList";
 
 export default class Order extends Component {
 

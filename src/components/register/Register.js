@@ -4,7 +4,7 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AppButton from '../../components/button/AppButton'
+import AppButton from '../button/AppButton'
 import * as UserApi from '../../api/users'
 
 export default class Register extends React.Component {

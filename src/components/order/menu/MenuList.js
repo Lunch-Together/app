@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { FlatList } from "react-native";
-import MenuListItem from "../../components/order/menu/MenuListItem";
+import MenuListItem from "./MenuListItem";
 
 export default class MenuList extends React.Component {
 

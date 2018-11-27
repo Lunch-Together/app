@@ -3,7 +3,7 @@
  */
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import AppButton from '../../components/button/AppButton'
+import AppButton from '../button/AppButton'
 import { Actions } from "react-native-router-flux";
 
 export default class Home extends React.Component {
@@ -11,7 +11,7 @@ export default class Home extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={require('../../img/img_qr.png')}/>
+          <Image source={require('../../assets/images/img_qr.png')}/>
         </View>
         <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text style={styles.title}>QR 코드를 찍어</Text>
