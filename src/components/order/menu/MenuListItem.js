@@ -9,8 +9,10 @@ export default class MenuListItem extends React.Component {
   render() {
     return (
       <View>
-        <Text>{this.props.menu.title}</Text>
+        <Text>{this.props.menu.name}</Text>
         <Text>{this.props.menu.description}</Text>
+        <Text>{this.props.menu.price}</Text>
+        <Text>{this.props.menu.thumbnailUrl}</Text>
       </View>
     )
   }

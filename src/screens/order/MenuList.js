@@ -10,24 +10,18 @@ export default class MenuList extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      menus: [
-        { id: '1', title: '매콤 떡볶이', description: '달콤하고 맛있어요' },
-        { id: '2', title: '순대 내장팍팍', description: '순대는 초장이죠' }
-      ]
-    }
   }
 
   render() {
     return (
       <FlatList
+        extraData={this.props}
         keyExtractor={this._keyExtractor}
-        data={this.state.menus}
+        data={this.props.menus}
         renderItem={({ item }) => <MenuListItem menu={item}/>}/>
     )
   }
 
-  _keyExtractor = (item, index) => item.id;
+  _keyExtractor = (item, index) => `${item.id}`;
 
 }

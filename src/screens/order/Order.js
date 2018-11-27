@@ -5,14 +5,14 @@
  */
 import React from 'react'
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native'
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
-import MenuList from "./MenuList";
+import { TabBar, TabView } from 'react-native-tab-view';
 import UserProfileListItem from "../../components/order/profile/UserProfileListItem";
 import * as meApi from "../../api/me"
 import * as groupApi from "../../api/groups"
 import * as shopApi from "../../api/shop"
 import SocketIOClient from 'socket.io-client'
 import { getAccessToken, URL } from '../../api/constants'
+import MenuList from "./MenuList";
 
 export default class Order extends React.Component {
 
@@ -73,12 +73,15 @@ export default class Order extends React.Component {
     }
 
     const shopMenus = await shopMenusResponse.json();
-    console.log(JSON.stringify(shopMenus.data));
 
     // 그룹 정보 적용
     this.setState({
       users: GroupMembers.map(item => {
         return { key: `${item.id}`, ...item }
+      }),
+      menus: shopMenus.data,
+      routes: shopMenus.data.map(category => {
+        return { key: `${category.id}`, title: category.name }
       })
     });
 
@@ -102,17 +105,12 @@ export default class Order extends React.Component {
         {/* 메뉴 정보 */}
         <TabView
           navigationState={this.state}
-          renderScene={SceneMap({
-            first: MenuList,
-            second: MenuList,
-            third: MenuList
-          })}
+          renderScene={this._renderScene}
           renderTabBar={this._renderTabBar}
           onIndexChange={index => this.setState({ index })}
           initialLayout={{ width: Dimensions.get('window').width, height: 0 }}
           style={styles.tabbar}
-          labelStyle={styles.label}
-        />
+          labelStyle={styles.label}/>
       </View>
     )
   }
@@ -129,6 +127,19 @@ export default class Order extends React.Component {
       />
     )
   }
+
+  _renderScene = ({ route }) => {
+    if (this.state.routes.indexOf(route) !== this.state.index || !this.state.menus) {
+      return <View/>;
+    }
+
+    const menu = this.state.menus.find(item => item.id === parseInt(route.key));
+    if (!menu) {
+      return <View/>
+    }
+
+    return <MenuList menus={menu.Menus}/>
+  };
 
   async _connectAndRegisterSocket(groupId) {
     const token = await getAccessToken();
