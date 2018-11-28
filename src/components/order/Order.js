@@ -4,15 +4,15 @@
  * 테이블에 추가된 유저가 메뉴를 주문하고 데이터를 보는 화면
  */
 import React, { Component } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
-import { TabBar, TabView } from 'react-native-tab-view';
-import UserProfileListItem from "./profile/UserProfileListItem";
-import * as meApi from "../../api/me"
-import * as groupApi from "../../api/groups"
-import * as shopApi from "../../api/shop"
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { TabBar, TabView } from 'react-native-tab-view'
+import UserProfileListItem from './profile/UserProfileListItem'
+import * as meApi from '../../api/me'
+import * as groupApi from '../../api/groups'
+import * as shopApi from '../../api/shop'
 import SocketIOClient from 'socket.io-client'
 import { getAccessToken, URL } from '../../api/constants'
-import MenuList from "./menu/MenuList";
+import MenuList from './menu/MenuList'
 
 export default class Order extends Component {
 
@@ -116,6 +116,20 @@ export default class Order extends Component {
           initialLayout={{ width: Dimensions.get('window').width, height: 0 }}
           style={styles.tabbar}
           labelStyle={styles.label}/>
+        <View style={styles.fixedBtnWrapper}>
+          {/*내 주문전송 버튼*/}
+          <View style={styles.sendMyOrderBtn}>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={{color: '#fff', fontSize: 18}}>내 주문 전송</Text>
+            </TouchableOpacity>
+          </View>
+          {/*주문서 버튼*/}
+          <View style={styles.orderSheet}>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={{color: '#fff', fontSize: 18}}>주문서</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     )
   }
@@ -253,5 +267,30 @@ const styles = StyleSheet.create({
   },
   priceText: {
     color: '#fff'
+  },
+  fixedBtnWrapper: {
+    position: 'absolute',
+    bottom: 45,
+    flexDirection: 'row',
+    alignSelf: 'center'
+  },
+  sendMyOrderBtn: {
+    backgroundColor: '#FC5B26',
+    paddingLeft: 25,
+    paddingRight: 25,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderRadius: 35,
+    alignSelf: 'center'
+  },
+  orderSheet: {
+    marginLeft: 15,
+    backgroundColor: '#494949',
+    paddingLeft: 25,
+    paddingRight: 25,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderRadius: 35,
+    alignSelf: 'center'
   }
 });
