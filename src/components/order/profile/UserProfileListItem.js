@@ -8,19 +8,48 @@ export default class UserProfileListItem extends React.Component {
 
   render() {
     return (
-      <View>
-        <Text style={styles.nickname}>{this.props.member.User.nickname}</Text>
-        <Text style={styles.nickname}>{this.props.member.role}</Text>
+      <View style={styles.profileListWrapper}>
+        {/*<Text style={styles.nickname}>{this.props.member.role}</Text>*/}
+        {/*<Image*/}
+          {/*style={styles.leaderIcon}*/}
+          {/*source={require('../../assets/images/ic_leader.png')}*/}
+        {/*/>*/}
         <Image
-          style={{ width: 50, height: 50 }}
-          source={{ uri: this.props.member.User.avatarUrl }}/>
+          style={[this.props.member.role === 'leader' ? styles.leaderProfile : styles.profile]}
+          source={{ uri: this.props.member.User.avatarUrl }}
+        />
+        <Text style={styles.nickname}>{this.props.member.User.nickname}</Text>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  profileListWrapper: {
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
+  leaderIcon: {
+    paddingLeft: 10,
+  },
+  profile: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+  },
+  leaderProfile: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#fff',
+    borderColor: '#FC5B26',
+    borderRadius: 25,
+    borderWidth: 3,
+  },
   nickname: {
-    color: '#fff'
+    color: '#fff',
+    marginTop: 10,
+    opacity: 0.7,
+    textAlign: 'center'
   }
 });

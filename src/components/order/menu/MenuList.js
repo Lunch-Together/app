@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import MenuListItem from "./MenuListItem";
 
 export default class MenuList extends React.Component {
@@ -15,6 +15,7 @@ export default class MenuList extends React.Component {
   render() {
     return (
       <FlatList
+        style={styles.MenuListWrapper}
         extraData={this.props}
         keyExtractor={this._keyExtractor}
         data={this.props.menus}
@@ -23,5 +24,10 @@ export default class MenuList extends React.Component {
   }
 
   _keyExtractor = (item, index) => `${item.id}`;
-
 }
+
+const styles = StyleSheet.create({
+  MenuListWrapper: {
+    padding: 20
+  }
+});

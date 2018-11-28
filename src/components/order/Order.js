@@ -105,7 +105,7 @@ export default class Order extends Component {
           </FlatList>
         </View>
         <View style={styles.priceGroup}>
-          <Text style={styles.priceText}>{this._orderTotalPrice()}</Text>
+          <Text style={styles.priceText}>총 {this._orderTotalPrice()}원</Text>
         </View>
         {/* 메뉴 정보 */}
         <TabView
@@ -231,7 +231,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   sectionHeader: {
-    height: 102,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
     backgroundColor: '#393939',
   },
   item: {
@@ -253,8 +255,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   priceGroup: {
+    paddingLeft: 15,
+    paddingRight: 15,
     backgroundColor: '#2c2c2c',
-    height: 51
+    height: 51,
+    justifyContent: 'center'
   },
   priceText: {
     color: '#fff'
