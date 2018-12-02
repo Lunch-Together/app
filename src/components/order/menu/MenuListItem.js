@@ -16,7 +16,7 @@ export default class MenuListItem extends React.Component {
         <View style={styles.content}>
           <Text style={styles.name}>{this.props.menu.name}</Text>
           <Text style={styles.desc}>{this.props.menu.description}</Text>
-          <View styles={styles.test}>
+          <View styles={styles.directionRow}>
             <View style={styles.countButton}>
               <TouchableOpacity activeOpacity={0.6}>
                 <View>
@@ -24,7 +24,9 @@ export default class MenuListItem extends React.Component {
                 </View>
               </TouchableOpacity>
             </View>
-            <Text style={styles.count}>0</Text>
+            <View>
+              <Text style={styles.count}>0</Text>
+            </View>
             <View style={styles.countButton}>
               <TouchableOpacity activeOpacity={0.6}>
                 <View>
@@ -48,9 +50,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flex: 1
   },
-  test: {
+  directionRow: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   content: {
     marginLeft: 15,
