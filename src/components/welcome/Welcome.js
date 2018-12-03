@@ -21,6 +21,17 @@ export default class Welcome extends React.Component {
       return
     }
 
+    // Me API 요청
+    const meResponse = await MeApi.getMe();
+    if (meResponse.ok !== true) {
+      Actions.replace('login');
+      return
+    }
+
+    // Me 정보 저장
+    const me = (await meResponse.json()).data;
+    await SecureStore.setItemAsync('me', JSON.stringify(me));
+
     // Token있을경우 테이블 참석 여부 등을 확인하여 페이지 이동
     const meGroupResponse = await MeApi.getMeGroup();
 

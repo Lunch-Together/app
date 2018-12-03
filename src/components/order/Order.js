@@ -8,12 +8,10 @@ import {
   Alert,
   Dimensions,
   FlatList,
-  Image,
   Modal,
-  ScrollView,
+  SafeAreaView,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View
 } from 'react-native'
@@ -27,6 +25,8 @@ import { getAccessToken, URL } from '../../api/constants'
 import MenuList from './menu/MenuList'
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/Ionicons'
+import SheetList from "./sheet/SheetList";
+import { numberCommaFormat } from "../../utils/NumberUtil";
 
 
 export default class Order extends Component {
@@ -127,7 +127,7 @@ export default class Order extends Component {
           </FlatList>
         </View>
         <View style={styles.priceGroup}>
-          <Text style={styles.priceText}>총 {this._orderTotalPrice()}원</Text>
+          <Text style={styles.priceText}>총 {numberCommaFormat(this._orderTotalPrice())}원</Text>
         </View>
         {/* 메뉴 정보 */}
         <TabView
@@ -149,7 +149,7 @@ export default class Order extends Component {
           <View style={styles.orderSheet}>
             <TouchableOpacity
               onPress={() => {
-                this.setModalVisible(!this.state.orderModalVisible);
+                this.setModalVisibility(!this.state.orderModalVisible);
               }}
               activeOpacity={0.6}>
               <Text style={{ color: '#fff', fontSize: 18 }}>주문서</Text>
@@ -159,158 +159,56 @@ export default class Order extends Component {
               animationType="slide"
               transparent={false}
               visible={this.state.orderModalVisible === true}
-              onRequestClose={function() {
-                this.Alert.alert('알림', '모달이 닫힙니다');
-              }.bind(this)}>
-              <View style={styles.container}>
+              onRequestClose={() => {
+              }}>
+              <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <View>
 
-              </View>
-              <View style={{ marginTop: 22 }}>
-                <View style={styles.modalNav}>
-                  <TouchableHighlight
-                    onPress={() => {
-                      this.setModalVisible(!this.state.orderModalVisible);
-                    }}
-                    style={{ flex: 1 }}>
-                    <Text>닫기</Text>
-                  </TouchableHighlight>
-                  <Text style={styles.orderNavTitle}>주문서</Text>
-                  <View style={{ flex: 1 }}></View>
+                  {/* 모달 상단부 */}
+                  <View style={styles.modalNav}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setModalVisibility(!this.state.orderModalVisible);
+                      }}
+                      activeOpacity={0.6}
+                      style={{ flex: 1 }}>
+                      <View>
+                        <Text>닫기</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <Text style={styles.orderNavTitle}>주문서</Text>
+                    <View style={{ flex: 1 }}/>
+                  </View>
                 </View>
-                <ScrollView>
-                  <View style={styles.myOrdersWrapper}>
-                    <Text style={styles.ordersTitle}>내가 주문한 메뉴</Text>
 
-                    <View style={styles.ordersProfileWrapper}>
-                      <Image
-                        style={styles.ordersProfileImg}
-                        source={require('../../assets/images/img_profile_sample.png')}
-                      />
-                      <Text style={styles.ordersProfileName}>나나나</Text>
-                    </View>
+                {/* 주문서 리스트 */}
+                <SheetList orders={this.state.orders} style={{ marginBottom: 90 }}/>
 
-                    <View style={styles.ordersTableWrapper}>
-                      <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                      <Text style={styles.ordersTableColSecond}>13개</Text>
-                      <Text style={styles.ordersTableColThird}>13000원</Text>
-                    </View>
-                    <View style={styles.ordersTableWrapper}>
-                      <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                      <Text style={styles.ordersTableColSecond}>13개</Text>
-                      <Text style={styles.ordersTableColThird}>13000원</Text>
-                    </View>
-                    <View style={styles.ordersTableDivider}></View>
-                    <View style={styles.ordersTableTotalWrapper}>
-                      <Text style={styles.ordersTableTotalTitle}>총 금액</Text>
-                      <Text style={styles.ordersTableTotalPrice}>13,000원</Text>
-                    </View>
-                  </View>
-                  <View style={styles.otherOrdersWrapper}>
-                    <Text style={styles.ordersTitle}>다른 멤버 x명이 주문한 메뉴</Text>
+                {/* 하단 버튼 */}
+                <View style={{ position: 'absolute', bottom: 90, right: 100, zIndex: 99 }}>
+                  <ActionButton buttonColor="#494949">
+                    <ActionButton.Item
+                      buttonColor="#9b59b6"
+                      title="내 주문 계산"
+                      onPress={() => console.log('notes tapped!')}>
+                      <Icon name="md-create" style={styles.actionButtonIcon}/>
+                    </ActionButton.Item>
+                    <ActionButton.Item
+                      buttonColor="#3498db"
+                      title="1/N 계산">
+                      <Icon
+                        name="md-notifications-off"
+                        style={styles.actionButtonIcon}/>
+                    </ActionButton.Item>
+                  </ActionButton>
+                </View>
 
-                    <View style={styles.othersOrderTableWrapper}>
-                      <View style={styles.ordersProfileWrapper}>
-                        <Image
-                          style={styles.ordersProfileImg}
-                          source={require('../../assets/images/img_profile_sample.png')}
-                        />
-                        <Text style={styles.ordersProfileName}>나나나</Text>
-                      </View>
-
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                        <Text style={styles.ordersTableColSecond}>13개</Text>
-                        <Text style={styles.ordersTableColThird}>13000원</Text>
-                      </View>
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                        <Text style={styles.ordersTableColSecond}>13개</Text>
-                        <Text style={styles.ordersTableColThird}>13000원</Text>
-                      </View>
-                      <View style={styles.ordersTableDivider}></View>
-                      <View style={styles.ordersTableTotalWrapper}>
-                        <Text style={styles.ordersOtherTableTotalTitle}>총 금액</Text>
-                        <Text style={styles.ordersOtherTableTotalPrice}>13,000원</Text>
-                      </View>
-                    </View>
-                    <View style={styles.othersOrderTableWrapper}>
-                      <View style={styles.ordersProfileWrapper}>
-                        <Image
-                          style={styles.ordersProfileImg}
-                          source={require('../../assets/images/img_profile_sample.png')}
-                        />
-                        <Text style={styles.ordersProfileName}>나나나</Text>
-                      </View>
-
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                        <Text style={styles.ordersTableColSecond}>13개</Text>
-                        <Text style={styles.ordersTableColThird}>13000원</Text>
-                      </View>
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                        <Text style={styles.ordersTableColSecond}>13개</Text>
-                        <Text style={styles.ordersTableColThird}>13000원</Text>
-                      </View>
-                      <View style={styles.ordersTableDivider}></View>
-                      <View style={styles.ordersTableTotalWrapper}>
-                        <Text style={styles.ordersOtherTableTotalTitle}>총 금액</Text>
-                        <Text style={styles.ordersOtherTableTotalPrice}>13,000원</Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={styles.totalOrdersWrapper}>
-                    <Text style={[styles.ordersTitle]}>종합 주문서</Text>
-
-                    <View style={styles.othersOrderTableWrapper}>
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={[styles.ordersTableColFirst, styles.bold]}>메뉴명</Text>
-                        <Text style={[styles.ordersTableColSecond, styles.bold]}>수량</Text>
-                        <Text style={[styles.ordersTableColThird, styles.bold]}>단가</Text>
-                      </View>
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                        <Text style={styles.ordersTableColSecond}>13개</Text>
-                        <Text style={styles.ordersTableColThird}>13000원</Text>
-                      </View>
-                      <View style={styles.ordersTableWrapper}>
-                        <Text style={styles.ordersTableColFirst}>매콤 떡볶이 순한맛</Text>
-                        <Text style={styles.ordersTableColSecond}>13개</Text>
-                        <Text style={styles.ordersTableColThird}>13000원</Text>
-                      </View>
-                      <View style={styles.ordersTableDivider}/>
-                      <View style={styles.ordersTableTotalWrapper}>
-                        <Text style={styles.ordersTableTotalTitle}>총 금액</Text>
-                        <Text style={styles.ordersTableTotalPrice}>13,000원</Text>
-                      </View>
-                    </View>
-                  </View>
-                </ScrollView>
-              </View>
-
-              <View style={{ position: 'absolute', bottom: 90, right: 100, zIndex: 99 }}>
-                <ActionButton buttonColor="#494949">
-                  <ActionButton.Item
-                    buttonColor="#9b59b6"
-                    title="내 주문 계산"
-                    onPress={() => console.log('notes tapped!')}>
-                    <Icon name="md-create" style={styles.actionButtonIcon}/>
-                  </ActionButton.Item>
-                  <ActionButton.Item
-                    buttonColor="#3498db"
-                    title="1/N 계산">
-                    <Icon
-                      name="md-notifications-off"
-                      style={styles.actionButtonIcon}/>
-                  </ActionButton.Item>
-                </ActionButton>
-              </View>
-
-              <View style={styles.requestOrderBtn}>
-                <TouchableOpacity activeOpacity={0.6}>
-                  <Text style={styles.requestOrderBtnText}>결제요청</Text>
-                </TouchableOpacity>
-              </View>
+                <View style={styles.requestOrderBtn}>
+                  <TouchableOpacity activeOpacity={0.6}>
+                    <Text style={styles.requestOrderBtnText}>결제요청</Text>
+                  </TouchableOpacity>
+                </View>
+              </SafeAreaView>
             </Modal>
           </View>
         </View>
@@ -494,7 +392,7 @@ export default class Order extends Component {
    *
    * @param visible
    */
-  setModalVisible(visible) {
+  setModalVisibility(visible) {
     this.setState({ orderModalVisible: visible });
   }
 }
@@ -567,70 +465,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   modalNav: {
-    padding: 50,
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingLeft: 36,
+    paddingRight: 36,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row'
   },
   orderNavTitle: {
     flex: 2, textAlign: 'center', fontSize: 18
-  },
-  myOrdersWrapper: {
-    padding: 30, backgroundColor: '#F6F8FA'
-  },
-  otherOrdersWrapper: {
-    padding: 30,
-  },
-  totalOrdersWrapper: {
-    padding: 30,
-    marginBottom: 150,
-    backgroundColor: '#FFEDE7'
-  },
-  ordersTitle: {
-    fontSize: 22, color: '#494949', fontWeight: 'bold'
-  },
-  ordersProfileWrapper: {
-    flexDirection: 'row', marginTop: 28, alignItems: 'center', marginBottom: 25
-  },
-  ordersProfileImg: {
-    width: 40, height: 40, borderRadius: 10,
-  },
-  ordersProfileName: {
-    marginLeft: 15, fontSize: 15,
-  },
-  ordersTableWrapper: {
-    flexDirection: 'row', marginBottom: 13,
-  },
-  ordersTableColFirst: {
-    flex: 3, color: '#494949', fontSize: 16
-  },
-  ordersTableColSecond: {
-    flex: 1, color: '#494949', fontSize: 16
-  },
-  ordersTableColThird: {
-    flex: 1, color: '#494949', fontSize: 16, textAlign: 'right',
-  },
-  ordersTableDivider: {
-    borderWidth: 1, borderTopColor: '#E9ECEF', opacity: 0.1,
-  },
-  ordersTableTotalWrapper: {
-    flexDirection: 'row', marginTop: 15
-  },
-  ordersTableTotalTitle: {
-    flex: 1, fontSize: 18, color: '#FC5B26', fontWeight: 'bold',
-  },
-  ordersTableTotalPrice: {
-    flex: 1, fontSize: 18, textAlign: 'right', justifyContent: 'flex-end', color: '#FC5B26', fontWeight: 'bold',
-  },
-  ordersOtherTableTotalTitle: {
-    flex: 1, fontSize: 15, color: '#494949', fontWeight: 'bold',
-  },
-  ordersOtherTableTotalPrice: {
-    flex: 1, fontSize: 15, textAlign: 'right', justifyContent: 'flex-end', color: '#494949', fontWeight: 'bold',
-  },
-  othersOrderTableWrapper: {
-    paddingTop: 25,
-    paddingBottom: 15,
   },
   requestOrderBtn: {
     position: 'absolute',
