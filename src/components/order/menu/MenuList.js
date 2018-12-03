@@ -8,10 +8,6 @@ import MenuListItem from "./MenuListItem";
 
 export default class MenuList extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <FlatList
@@ -19,7 +15,12 @@ export default class MenuList extends React.Component {
         extraData={this.props}
         keyExtractor={this._keyExtractor}
         data={this.props.menus}
-        renderItem={({ item }) => <MenuListItem menu={item}/>}/>
+        renderItem={({ item }) => <MenuListItem
+          onChangeAmount={(menu, type) => {
+            if (this.props.onChangeMenuAmount) this.props.onChangeMenuAmount(menu, type);
+          }}
+          menu={item}
+          amount={item.amount || 0}/>}/>
     )
   }
 

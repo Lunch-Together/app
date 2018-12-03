@@ -9,13 +9,12 @@ import {
   FlatList,
   Image,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
   TouchableOpacity,
-  View,
-  ScrollView,
-
+  View
 } from 'react-native'
 import { TabBar, TabView } from 'react-native-tab-view'
 import UserProfileListItem from './profile/UserProfileListItem'
@@ -35,6 +34,7 @@ export default class Order extends Component {
     index: 0,
     routes: [{ key: 'dummy' }],
     orders: [],
+    preOrders: [],
     orderModalVisible: false,
   };
 
@@ -136,41 +136,40 @@ export default class Order extends Component {
           {/*내 주문전송 버튼*/}
           <View style={styles.sendMyOrderBtn}>
             <TouchableOpacity activeOpacity={0.6}>
-              <Text style={{color: '#fff', fontSize: 18}}>내 주문 전송</Text>
+              <Text style={{ color: '#fff', fontSize: 18 }}>내 주문 전송</Text>
             </TouchableOpacity>
           </View>
           {/*주문서 버튼*/}
           <View style={styles.orderSheet}>
             <TouchableOpacity
-              onPress={() => {this.setModalVisible(!this.state.orderModalVisible);}}
-              activeOpacity={0.6}
-            >
-              <Text style={{color: '#fff', fontSize: 18}}>주문서</Text>
+              onPress={() => {
+                this.setModalVisible(!this.state.orderModalVisible);
+              }}
+              activeOpacity={0.6}>
+              <Text style={{ color: '#fff', fontSize: 18 }}>주문서</Text>
             </TouchableOpacity>
 
             <Modal
               animationType="slide"
               transparent={false}
               visible={this.state.orderModalVisible === true}
-              onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-              }}>
+              onRequestClose={function() {
+                this.Alert.alert('알림', '모달이 닫힙니다');
+              }.bind(this)}>
               <View style={styles.container}>
 
               </View>
-
-              <View style={{marginTop: 22}}>
+              <View style={{ marginTop: 22 }}>
                 <View style={styles.modalNav}>
                   <TouchableHighlight
                     onPress={() => {
                       this.setModalVisible(!this.state.orderModalVisible);
                     }}
-                    style={{flex: 1}}
-                  >
+                    style={{ flex: 1 }}>
                     <Text>닫기</Text>
                   </TouchableHighlight>
                   <Text style={styles.orderNavTitle}>주문서</Text>
-                  <View style={{flex: 1}}></View>
+                  <View style={{ flex: 1 }}></View>
                 </View>
                 <ScrollView>
                   <View style={styles.myOrdersWrapper}>
@@ -273,7 +272,7 @@ export default class Order extends Component {
                         <Text style={styles.ordersTableColSecond}>13개</Text>
                         <Text style={styles.ordersTableColThird}>13000원</Text>
                       </View>
-                      <View style={styles.ordersTableDivider}></View>
+                      <View style={styles.ordersTableDivider}/>
                       <View style={styles.ordersTableTotalWrapper}>
                         <Text style={styles.ordersTableTotalTitle}>총 금액</Text>
                         <Text style={styles.ordersTableTotalPrice}>13,000원</Text>
@@ -283,29 +282,27 @@ export default class Order extends Component {
                 </ScrollView>
               </View>
 
-              <View style={{position: 'absolute', bottom: 90, right: 100, zIndex: 99}}>
+              <View style={{ position: 'absolute', bottom: 90, right: 100, zIndex: 99 }}>
                 <ActionButton buttonColor="#494949">
                   <ActionButton.Item
                     buttonColor="#9b59b6"
                     title="내 주문 계산"
                     onPress={() => console.log('notes tapped!')}>
-                    <Icon name="android-create" style={styles.actionButtonIcon} />
+                    <Icon name="md-create" style={styles.actionButtonIcon}/>
                   </ActionButton.Item>
                   <ActionButton.Item
                     buttonColor="#3498db"
-                    title="1/N 계산"
-                    onPress={() => {}}>
+                    title="1/N 계산">
                     <Icon
-                      name="android-notifications-none"
-                      style={styles.actionButtonIcon}
-                    />
+                      name="md-notifications-off"
+                      style={styles.actionButtonIcon}/>
                   </ActionButton.Item>
                 </ActionButton>
               </View>
 
               <View style={styles.requestOrderBtn}>
                 <TouchableOpacity activeOpacity={0.6}>
-                    <Text style={styles.requestOrderBtnText}>결제요청</Text>
+                  <Text style={styles.requestOrderBtnText}>결제요청</Text>
                 </TouchableOpacity>
               </View>
             </Modal>
@@ -353,7 +350,7 @@ export default class Order extends Component {
       return <View/>
     }
 
-    return <MenuList menus={menu.Menus}/>
+    return <MenuList onChangeMenuAmount={this._onChangeMenuAmount.bind(this)} menus={menu.Menus}/>
   };
 
   /**
@@ -404,6 +401,33 @@ export default class Order extends Component {
   }
 
   /**
+   * 메뉴 리스트에서 메뉴 갯수를 조정하였을때 불리는 콜백
+   *
+   * @param menu 변경된 메뉴 정보
+   * @param type [plus, minus]
+   * @private
+   */
+  _onChangeMenuAmount(menu, type) {
+    switch (type) {
+      case 'plus':
+        const value = Object.assign({}, menu);
+        delete value.amount;
+        this.state.preOrders.push(value);
+        this.setState({
+          preOrders: this.state.preOrders
+        });
+        break;
+
+      case 'minus':
+        this.state.preOrders.slice(this.state.preOrders.findIndex(preOrder => preOrder.id === menu.id), 1)
+        this.setState({
+          preOrders: this.state.preOrders
+        });
+        break;
+    }
+  }
+
+  /**
    * 현재 그룹에서 주문한 총 금액 데이터를 반환한다
    *
    * @returns {*}
@@ -421,8 +445,7 @@ export default class Order extends Component {
 
   /* 주문하기 모달 */
   setModalVisible(visible) {
-    console.log('set', visible)
-    this.setState({orderModalVisible: visible});
+    this.setState({ orderModalVisible: visible });
   }
 }
 

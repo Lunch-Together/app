@@ -2,45 +2,60 @@
  * 주문 리스트에서 뜨는 메뉴 리스트 컴포넌트
  */
 import React from 'react'
-import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class MenuListItem extends React.Component {
+
+  state = {
+    amount: this.props.menu.amount || 0
+  };
 
   render() {
     return (
       <View style={styles.listWrapper}>
         <Image
           style={styles.menuImage}
-          source={{ uri: this.props.menu.thumbnailUrl }}
-        />
+          source={{ uri: this.props.menu.thumbnailUrl }}/>
         <View style={styles.content}>
           <Text style={styles.name}>{this.props.menu.name}</Text>
           <Text style={styles.desc}>{this.props.menu.description}</Text>
-          <View styles={styles.directionRow}>
-            <View style={styles.countButton}>
-              <TouchableOpacity activeOpacity={0.6}>
-                <View>
-                  <Text style={{ color: '#ABAEB6' }}>-</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.directionRow}>
+            <TouchableOpacity activeOpacity={0.6} onPress={this.minusAmount.bind(this)} style={styles.countButton}>
+              <Text style={styles.amountButton}>-</Text>
+            </TouchableOpacity>
             <View>
-              <Text style={styles.count}>0</Text>
+              <Text style={styles.count}>{this.state.amount}</Text>
             </View>
-            <View style={styles.countButton}>
-              <TouchableOpacity activeOpacity={0.6}>
-                <View>
-                  <Text style={{ color: '#ABAEB6' }}>+</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={styles.price}>{this.props.menu.price}원</Text>
-            </View>
+            <TouchableOpacity activeOpacity={0.6} onPress={this.plusAmount.bind(this)} style={styles.countButton}>
+              <Text style={styles.amountButton}>+</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.priceGroup}>
+            <Text style={styles.price}>{this.props.menu.price}원</Text>
           </View>
         </View>
       </View>
     )
+  }
+
+  plusAmount() {
+    this.state.amount = this.state.amount + 1;
+    this.setState({ amount: this.state.amount });
+    if (this.props.onChangeAmount) {
+      this.props.onChangeAmount(this.props.menu, 'plus');
+    }
+    this.props.menu.amount = this.state.amount
+  }
+
+  minusAmount() {
+    if (this.state.amount - 1 >= 0) {
+      this.state.amount = this.state.amount - 1;
+      this.setState({ amount: this.state.amount });
+      if (this.props.onChangeAmount) {
+        this.props.onChangeAmount(this.props.menu, 'minus');
+      }
+      this.props.menu.amount = this.state.amount
+    }
   }
 }
 
@@ -53,20 +68,35 @@ const styles = StyleSheet.create({
   directionRow: {
     flex: 1,
     flexDirection: 'row',
+    marginTop: 6
   },
   content: {
     marginLeft: 15,
     flex: 2,
   },
   count: {
-    padding: 5,
-    borderWidth: 1,
+    paddingLeft: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingRight: 10,
+    height: 30,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#DBDFE3',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  amountButton: {
+    color: '#ABAEB6',
     alignItems: 'center',
     justifyContent: 'center',
   },
   countButton: {
-    padding: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    height: 30,
     borderWidth: 1,
     borderColor: '#DBDFE3',
     alignItems: 'center',
@@ -89,5 +119,8 @@ const styles = StyleSheet.create({
     color: '#494949',
     fontSize: 18,
     alignItems: 'flex-end'
+  },
+  priceGroup: {
+    marginTop: 6
   }
 });
