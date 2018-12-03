@@ -51,10 +51,11 @@ export const getGroupOrders = async (id) => {
 
 export const postGroupOrders = async (id, orders) => {
   return await fetch(`${URL}/groups/${id}/orders`, {
+    method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${await getAccessToken()}`
+      Authorization: `Bearer ${await getAccessToken()}`
     },
     body: JSON.stringify(orders)
   })
