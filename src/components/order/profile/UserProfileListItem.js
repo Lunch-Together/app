@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#FC5B26',
     borderRadius: 25,
-    borderWidth: 3,
+    borderWidth: 2,
   },
   nickname: {
     color: '#fff',
