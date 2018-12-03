@@ -5,6 +5,7 @@
  */
 import React, { Component } from 'react'
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -31,8 +32,10 @@ import Icon from 'react-native-vector-icons/Ionicons'
 export default class Order extends Component {
 
   state = {
+    groupId: null,
     index: 0,
     routes: [{ key: 'dummy' }],
+    menus: [],
     orders: [],
     preOrders: [],
     orderModalVisible: false,
@@ -59,6 +62,9 @@ export default class Order extends Component {
 
     // 그룹 아이디
     const groupId = meGroup.data.id;
+
+    // 그룹 아이디 state 저장
+    this.setState({ groupId });
 
     // 그룹 상세 정보 요청
     const groupResponse = await groupApi.getGroup(groupId);
@@ -135,7 +141,7 @@ export default class Order extends Component {
         <View style={styles.fixedBtnWrapper}>
           {/*내 주문전송 버튼*/}
           <View style={styles.sendMyOrderBtn}>
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={this._postOrders.bind(this)}>
               <Text style={{ color: '#fff', fontSize: 18 }}>내 주문 전송</Text>
             </TouchableOpacity>
           </View>
@@ -443,7 +449,51 @@ export default class Order extends Component {
     }
   }
 
-  /* 주문하기 모달 */
+  /**
+   * 유저가 추가한 메뉴를 주문 전송한다
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _postOrders() {
+    if (this.state.preOrders.length === 0) {
+      Alert.alert('알림', '추가된 메뉴가 없습니다');
+      return
+    }
+
+    const orderResponse = await groupApi.postGroupOrders(this.state.groupId, this.state.preOrders.map(preOrder => {
+      return {
+        MenuId: preOrder.id
+      }
+    }));
+
+    if (orderResponse.ok !== true) {
+      Alert.alert('알림', '주문에 실패하였습니다');
+      return
+    }
+
+    // 요청 성공 데이터로 뷰 업데이트
+    await orderResponse.json();
+
+    // 기존에 유저가 수량을 변경해놓은걸 초기화한다
+    const menus = this.state.menus.map(menuCategory => {
+      return Object.assign(menuCategory, {
+        Menus: menuCategory.Menus.map(menu => {
+          return Object.assign(menu, { amount: 0 });
+        })
+      })
+    });
+
+    // 한번에 업데이트가 되지 않는 문제로 menus 를 state 에서 빈 어레이로 변경했다가 다시 값을 집어 넣는다
+    this.setState({ menus: [], preOrders: [] });
+    this.setState({ menus })
+  }
+
+  /**
+   * 주문하기 모달 Visibility 변경
+   *
+   * @param visible
+   */
   setModalVisible(visible) {
     this.setState({ orderModalVisible: visible });
   }
@@ -596,7 +646,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     textAlign: 'center',
-  },
-
-
+  }
 });
