@@ -45,7 +45,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor: '#fff',
+    borderColor: '#FFF',
     borderRadius: 25,
+    borderWidth: 2
   },
   leaderProfile: {
     width: 50,
