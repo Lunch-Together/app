@@ -200,7 +200,7 @@ export default class Order extends Component {
                 </View>
 
                 {/* 주문서 리스트 */}
-                <SheetList orders={this.state.orders} style={{ marginBottom: 90 }}/>
+                <SheetList orders={this.state.orders} style={{ marginBottom: 110 }}/>
 
                 {/* 계산 방식을 변경하는 버튼 (리더 권한을 가지고 있고 결제 요청 전에만 볼 수 있음) */}
                 {this.state.isLeader && this.state.group && this.state.group.states === 'ongoing' &&
