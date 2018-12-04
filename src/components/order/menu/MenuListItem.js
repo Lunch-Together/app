@@ -3,6 +3,7 @@
  */
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { numberCommaFormat } from "../../../utils/NumberUtil";
 
 export default class MenuListItem extends React.Component {
 
@@ -23,7 +24,7 @@ export default class MenuListItem extends React.Component {
             <TouchableOpacity activeOpacity={0.6} onPress={this.minusAmount.bind(this)} style={styles.countButton}>
               <Text style={styles.amountButton}>-</Text>
             </TouchableOpacity>
-            <View>
+            <View style={styles.countGroup}>
               <Text style={styles.count}>{this.state.amount}</Text>
             </View>
             <TouchableOpacity activeOpacity={0.6} onPress={this.plusAmount.bind(this)} style={styles.countButton}>
@@ -31,7 +32,7 @@ export default class MenuListItem extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={styles.priceGroup}>
-            <Text style={styles.price}>{this.props.menu.price}원</Text>
+            <Text style={styles.price}>{numberCommaFormat(this.props.menu.price)}원</Text>
           </View>
         </View>
       </View>
@@ -74,15 +75,18 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     flex: 2,
   },
+  countGroup: {
+    borderTopWidth: 1,
+    height: 30,
+    borderBottomWidth: 1,
+    borderColor: '#DBDFE3'
+  },
   count: {
     paddingLeft: 10,
     paddingTop: 5,
     paddingBottom: 5,
     paddingRight: 10,
     height: 30,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#DBDFE3',
     justifyContent: 'center',
     alignItems: 'center'
   },
