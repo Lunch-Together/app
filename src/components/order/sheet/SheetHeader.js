@@ -44,13 +44,21 @@ export default class SheetHeader extends React.Component {
   }
 
   render() {
+    const hasAvatar = this.state.me.avatarUrl !== null;
+
     return <View style={styles.myOrdersWrapper}>
       <Text style={styles.ordersTitle}>내가 주문한 메뉴</Text>
 
       <View style={styles.ordersProfileWrapper}>
-        <Image
-          style={styles.ordersProfileImg}
-          source={{ uri: this.state.me.avatarUrl }}/>
+        {hasAvatar ? (
+          <Image
+            style={styles.ordersProfileImg}
+            source={{ uri: this.state.me.avatarUrl }}/>
+        ) : (
+          <Image
+            style={styles.ordersProfileImg}
+            source={require('../../../assets/images/img_profile_sample.png')}/>
+        )}
         <Text style={styles.ordersProfileName}>{this.state.me.nickname}</Text>
       </View>
 

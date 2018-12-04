@@ -7,17 +7,26 @@ import { Image, StyleSheet, Text, View } from "react-native";
 export default class UserProfileListItem extends React.Component {
 
   render() {
+    const hasAvatar = this.props.member.User.avatarUrl !== null;
+
     return (
       <View style={styles.profileListWrapper}>
         {/*<Text style={styles.nickname}>{this.props.member.role}</Text>*/}
         {/*<Image*/}
-          {/*style={styles.leaderIcon}*/}
-          {/*source={require('../../assets/images/ic_leader.png')}*/}
+        {/*style={styles.leaderIcon}*/}
+        {/*source={require('../../assets/images/ic_leader.png')}*/}
         {/*/>*/}
-        <Image
-          style={[this.props.member.role === 'leader' ? styles.leaderProfile : styles.profile]}
-          source={{ uri: this.props.member.User.avatarUrl }}
-        />
+
+        {/* 유저가 프필 이미지가 있을 경우와 없을 경우로 나눠 사용 */}
+        {hasAvatar ? (
+          <Image
+            style={[this.props.member.role === 'leader' ? styles.leaderProfile : styles.profile]}
+            source={{ uri: this.props.member.User.avatarUrl }}/>
+        ) : (
+          <Image
+            style={[this.props.member.role === 'leader' ? styles.leaderProfile : styles.profile]}
+            source={require('../../../assets/images/img_profile_sample.png')}/>
+        )}
         <Text style={styles.nickname}>{this.props.member.User.nickname}</Text>
       </View>
     )

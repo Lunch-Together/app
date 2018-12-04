@@ -32,11 +32,19 @@ export default class SheetListItem extends React.Component {
   }
 
   render() {
+    const hasAvatar = this.state.user.avatarUrl !== null;
+
     return <View style={styles.othersOrderTableWrapper}>
       <View style={styles.ordersProfileWrapper}>
-        <Image
-          style={styles.ordersProfileImg}
-          source={{ uri: this.state.user.avatarUrl }}/>
+        {hasAvatar ? (
+          <Image
+            style={styles.ordersProfileImg}
+            source={{ uri: this.state.user.avatarUrl }}/>
+        ) : (
+          <Image
+            style={styles.ordersProfileImg}
+            source={require('../../../assets/images/img_profile_sample.png')}/>
+        )}
         <Text style={styles.ordersProfileName}>{this.state.user.nickname}</Text>
       </View>
 
