@@ -27,6 +27,7 @@ import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/Ionicons'
 import SheetList from "./sheet/SheetList";
 import { numberCommaFormat } from "../../utils/NumberUtil";
+import { SecureStore } from "expo";
 
 
 export default class Order extends Component {
@@ -49,6 +50,10 @@ export default class Order extends Component {
   }
 
   async componentDidMount() {
+
+    // Me 정보
+    const me = JSON.parse(await SecureStore.getItemAsync('me'));
+
     // 현재 로그인한 유저의 그룹 정보를 요청하고
     // 멤버 정보와, 메뉴 정보를 업데이트 한다
     const meGroupResponse = await meApi.getMeGroup();
@@ -98,6 +103,12 @@ export default class Order extends Component {
     // 그룹의 주문 정보
     const orders = await ordersResponse.json();
 
+    // 이 그룹에 내 정보를 가져온다
+    const groupMemberMe = GroupMembers.filter(groupMember => groupMember.UserId === me.id);
+
+    // 내 정보가 리더인지 아닌지를 저장한다
+    const isLeader = groupMemberMe.length >= 1 && groupMemberMe[0].role === 'leader';
+
     // 그룹 정보 적용
     this.setState({
       users: GroupMembers.map(item => {
@@ -107,7 +118,9 @@ export default class Order extends Component {
       routes: shopMenus.data.map(category => {
         return { key: `${category.id}`, title: category.name }
       }),
-      orders: orders.data
+      orders: orders.data,
+      group: meGroup.data,
+      isLeader
     });
 
     // 소켓 연결
@@ -139,12 +152,16 @@ export default class Order extends Component {
           style={styles.tabbar}
           labelStyle={styles.label}/>
         <View style={styles.fixedBtnWrapper}>
-          {/*내 주문전송 버튼*/}
+
+          {/* 내 주문전송 버튼 -- 현재 진행중인 상태에만 버튼이 보이도록 설정 */}
+          {this.state.group && this.state.group.states === 'ongoing' &&
           <View style={styles.sendMyOrderBtn}>
             <TouchableOpacity activeOpacity={0.6} onPress={this._postOrders.bind(this)}>
               <Text style={{ color: '#fff', fontSize: 18 }}>내 주문 전송</Text>
             </TouchableOpacity>
           </View>
+          }
+
           {/*주문서 버튼*/}
           <View style={styles.orderSheet}>
             <TouchableOpacity
@@ -184,30 +201,32 @@ export default class Order extends Component {
                 {/* 주문서 리스트 */}
                 <SheetList orders={this.state.orders} style={{ marginBottom: 90 }}/>
 
-                {/* 하단 버튼 */}
-                <View style={{ position: 'absolute', bottom: 90, right: 100, zIndex: 99 }}>
-                  <ActionButton buttonColor="#494949">
-                    <ActionButton.Item
-                      buttonColor="#9b59b6"
-                      title="내 주문 계산"
-                      onPress={() => console.log('notes tapped!')}>
-                      <Icon name="md-create" style={styles.actionButtonIcon}/>
-                    </ActionButton.Item>
-                    <ActionButton.Item
-                      buttonColor="#3498db"
-                      title="1/N 계산">
-                      <Icon
-                        name="md-notifications-off"
-                        style={styles.actionButtonIcon}/>
-                    </ActionButton.Item>
-                  </ActionButton>
-                </View>
+                {/* 계산 방식을 변경하는 버튼 (리더 권한을 가지고 있고 결제 요청 전에만 볼 수 있음) */}
+                {this.state.isLeader && this.state.group && this.state.group.states === 'ongoing' &&
+                <ActionButton buttonColor="#494949" style={{ marginBottom: 44 }}>
+                  <ActionButton.Item
+                    buttonColor="#9b59b6"
+                    title="내 주문 계산"
+                    onPress={() => console.log('notes tapped!')}>
+                    <Icon name="md-create" style={styles.actionButtonIcon}/>
+                  </ActionButton.Item>
+                  <ActionButton.Item
+                    buttonColor="#3498db"
+                    title="1/N 계산">
+                    <Icon
+                      name="md-notifications-off"
+                      style={styles.actionButtonIcon}/>
+                  </ActionButton.Item>
+                </ActionButton>
+                }
 
-                <View style={styles.requestOrderBtn}>
-                  <TouchableOpacity activeOpacity={0.6}>
-                    <Text style={styles.requestOrderBtnText}>결제요청</Text>
-                  </TouchableOpacity>
-                </View>
+                {/* 상태를 변경하는 버튼 (리더 권한을 가지고 있고 결제 요청 전에만 볼 수 있음) */}
+                {this.state.isLeader && this.state.group && this.state.group.states === 'ongoing' &&
+                <TouchableOpacity activeOpacity={0.9} onPress={this._requestGroupToProgressInPurchase.bind(this)}
+                                  style={styles.requestOrderBtn}>
+                  <Text style={styles.requestOrderBtnText}>결제요청</Text>
+                </TouchableOpacity>
+                }
               </SafeAreaView>
             </Modal>
           </View>
@@ -292,7 +311,20 @@ export default class Order extends Component {
 
     // 그룹에 상태가 변경 되었을때 (주문중, 결제요청, 완료)
     this.socket.on('update-group-states', (states) => {
-      console.log(`Change States : ${states.data}`);
+      switch (states.data) {
+        case 'ongoing':
+
+          break;
+
+        case 'payment-in-progress':
+
+          break;
+
+        case 'archived':
+
+          break;
+      }
+      this.setState({ group: { ...this.state.group, states: states.data } });
     });
 
     // 그룹에 결제 방법이 변경 되었을때
@@ -388,6 +420,40 @@ export default class Order extends Component {
   }
 
   /**
+   * 그룹의 상태를 변경할거냐는 Alert을 보여준다
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _requestGroupToProgressInPurchase() {
+    Alert.alert(
+      '알림',
+      '정말로 결제 요청 상태로 변경하시겠습니까?\n더 이상 결제 방식 변경과, 주문을 추가할 수 없습니다',
+      [
+        { text: '아니요', onPress: () => console.log('Canceled'), style: 'cancel' },
+        { text: '예', onPress: () => this._groupToProgressInPurchase() }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  /**
+   * 그룹을 결제 상태로 변경한다
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _groupToProgressInPurchase() {
+    const changeResponse = await groupApi.changeGroupToPurchas(this.state.groupId);
+    if (changeResponse.ok !== true) {
+      Alert.alert('알림', '상태 변경에 실패하였습니다');
+      return
+    }
+
+    // 상태 변경에 따른 뷰 처리
+    console.log('변경 성공')
+  }
+
+  /**
    * 주문하기 모달 Visibility 변경
    *
    * @param visible
@@ -480,7 +546,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    padding: 18,
+    padding: 24,
     backgroundColor: '#333',
     justifyContent: 'center',
     flexDirection: 'row',
