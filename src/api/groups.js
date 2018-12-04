@@ -81,7 +81,30 @@ export const changeGroupToPurchas = async (id) => {
   })
 };
 
-export const changeGroupToSplit = async () => {
-
+export const changeGroupPurchaseTypeToSplit = async (id) => {
+  return await fetch(`${URL}/groups/${id}`, {
+    method: 'put',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await getAccessToken()}`
+    },
+    body: JSON.stringify({
+      paymentType: 'split'
+    })
+  })
 };
 
+export const changeGroupPurchaseTypeToDutch = async (id) => {
+  return await fetch(`${URL}/groups/${id}`, {
+    method: 'put',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await getAccessToken()}`
+    },
+    body: JSON.stringify({
+      paymentType: 'dutch'
+    })
+  })
+};

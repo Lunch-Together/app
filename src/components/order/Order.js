@@ -208,11 +208,12 @@ export default class Order extends Component {
                   <ActionButton.Item
                     buttonColor="#9b59b6"
                     title="내 주문 계산"
-                    onPress={() => console.log('notes tapped!')}>
+                    onPress={() => this._requestGroupChangePurchaseType('dutch')}>
                     <Icon name="md-create" style={styles.actionButtonIcon}/>
                   </ActionButton.Item>
                   <ActionButton.Item
                     buttonColor="#3498db"
+                    onPress={() => this._requestGroupChangePurchaseType('split')}
                     title="1/N 계산">
                     <Icon
                       name="md-notifications-off"
@@ -478,9 +479,50 @@ export default class Order extends Component {
       Alert.alert('알림', '상태 변경에 실패하였습니다');
       return
     }
+  }
 
-    // 상태 변경에 따른 뷰 처리
-    console.log('변경 성공')
+  /**
+   * 그룹 결제 방식 변경 Alert
+   *
+   * @param paymentType 결제 방식
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _requestGroupChangePurchaseType(paymentType) {
+    Alert.alert(
+      '알림',
+      '정말로 결제 방법을 변경하시겠습니까?',
+      [
+        { text: '아니요', onPress: () => console.log('Canceled'), style: 'cancel' },
+        { text: '예', onPress: () => this._groupChangePurchaseType(paymentType) }
+      ],
+      { cancelable: false }
+    );
+  }
+
+  /**
+   * 그룹 결제 방식 변경
+   *
+   * @param paymentType 결제 방식
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _groupChangePurchaseType(paymentType) {
+    let response;
+    switch (paymentType) {
+      case 'split':
+        response = await groupApi.changeGroupPurchaseTypeToSplit(this.state.groupId);
+        break;
+
+      case 'dutch':
+        response = await groupApi.changeGroupPurchaseTypeToDutch(this.state.groupId);
+        break;
+    }
+
+    if (!response || response.ok !== true) {
+      Alert.alert('알림', '결제 방법 변경에 실패하였습니다');
+      return;
+    }
   }
 
   /**
