@@ -32,7 +32,7 @@ export default class SheetListItem extends React.Component {
   }
 
   render() {
-    const hasAvatar = this.state.user.avatarUrl !== null;
+    const hasAvatar = this.state.user && this.state.user.avatarUrl !== null;
 
     return <View style={styles.othersOrderTableWrapper}>
       <View style={styles.ordersProfileWrapper}>
