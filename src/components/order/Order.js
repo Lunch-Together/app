@@ -26,8 +26,8 @@ import MenuList from './menu/MenuList'
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/Ionicons'
 import SheetList from "./sheet/SheetList";
-import { numberCommaFormat } from "../../utils/NumberUtil";
 import { SecureStore } from "expo";
+import { numberCommaFormat } from "../../utils/NumberUtil";
 
 
 export default class Order extends Component {
@@ -120,7 +120,8 @@ export default class Order extends Component {
       }),
       orders: orders.data,
       group: meGroup.data,
-      isLeader
+      isLeader,
+      me
     });
 
     // 소켓 연결
@@ -140,7 +141,7 @@ export default class Order extends Component {
           </FlatList>
         </View>
         <View style={styles.priceGroup}>
-          <Text style={styles.priceText}>총 {numberCommaFormat(this._orderTotalPrice())}원</Text>
+          {this._renderPriceView()}
         </View>
         {/* 메뉴 정보 */}
         <TabView
@@ -277,6 +278,35 @@ export default class Order extends Component {
   };
 
   /**
+   * 그룹의 돈 계산 방법에 따라 내가 내야할 금액을 보여주는 뷰를 가져온다
+   * @private
+   */
+  _renderPriceView = () => {
+    if (this.state.group) {
+      const total = this._orderTotalPrice();
+      switch (this.state.group.paymentType) {
+        case 'dutch':
+          const totalPrice = this.state.orders.filter(order => order.UserId === this.state.me.id)
+            .map(order => order.Menu.price)
+            .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+          return <View>
+            <Text style={styles.priceText}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액
+              : {numberCommaFormat(totalPrice)}원</Text>
+          </View>;
+
+        case 'split':
+          const userCount = this.state.users.length;
+          return <View>
+            <Text style={styles.priceText}>총 {numberCommaFormat(total)}원
+              / {userCount}명 = {numberCommaFormat(total / userCount)}원</Text>
+          </View>;
+      }
+    }
+
+    return <View/>
+  };
+
+  /**
    * 그룹 아이디를 가지고 Socket 에 Join 요청을 하고
    * 주문에 필요한 모든 socket event 들을 등록한다
    *
@@ -329,7 +359,7 @@ export default class Order extends Component {
 
     // 그룹에 결제 방법이 변경 되었을때
     this.socket.on('update-group-paymentType', (paymentType) => {
-      console.log(`Change States : ${paymentType.data}`);
+      this.setState({ group: { ...this.state.group, paymentType: paymentType.data } });
     });
 
     // 방에 접속하면 조인을 요청한다
@@ -355,7 +385,7 @@ export default class Order extends Component {
         break;
 
       case 'minus':
-        this.state.preOrders.slice(this.state.preOrders.findIndex(preOrder => preOrder.id === menu.id), 1)
+        this.state.preOrders.slice(this.state.preOrders.findIndex(preOrder => preOrder.id === menu.id), 1);
         this.setState({
           preOrders: this.state.preOrders
         });
@@ -503,7 +533,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   priceText: {
-    color: '#fff'
+    color: '#fff',
+    textAlign: 'right'
   },
   fixedBtnWrapper: {
     position: 'absolute',
