@@ -380,16 +380,12 @@ export default class Order extends Component {
         const value = Object.assign({}, menu);
         delete value.amount;
         this.state.preOrders.push(value);
-        this.setState({
-          preOrders: this.state.preOrders
-        });
+        this.setState({ preOrders: this.state.preOrders });
         break;
 
       case 'minus':
-        this.state.preOrders.slice(this.state.preOrders.findIndex(preOrder => preOrder.id === menu.id), 1);
-        this.setState({
-          preOrders: this.state.preOrders
-        });
+        this.state.preOrders.splice(this.state.preOrders.findIndex(preOrder => preOrder.id === menu.id), 1);
+        this.setState({ preOrders: this.state.preOrders });
         break;
     }
   }
