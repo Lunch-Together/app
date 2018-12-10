@@ -24,6 +24,8 @@ export default class Welcome extends React.Component {
     // Me API 요청
     const meResponse = await MeApi.getMe();
     if (meResponse.ok !== true) {
+      await SecureStore.deleteItemAsync('token');
+      await SecureStore.deleteItemAsync('me');
       Actions.replace('login');
       return
     }
