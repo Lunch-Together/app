@@ -8,14 +8,10 @@ export default class UserProfileListItem extends React.Component {
 
   render() {
     const hasAvatar = this.props.member.User.avatarUrl !== null;
+    const isLeader = this.props.member.role === 'leader';
 
     return (
       <View style={styles.profileListWrapper}>
-        {/*<Text style={styles.nickname}>{this.props.member.role}</Text>*/}
-        {/*<Image*/}
-        {/*style={styles.leaderIcon}*/}
-        {/*source={require('../../assets/images/ic_leader.png')}*/}
-        {/*/>*/}
 
         {/* 유저가 프필 이미지가 있을 경우와 없을 경우로 나눠 사용 */}
         {hasAvatar ? (
@@ -28,6 +24,12 @@ export default class UserProfileListItem extends React.Component {
             source={require('../../../assets/images/img_profile_sample.png')}/>
         )}
         <Text style={styles.nickname}>{this.props.member.User.nickname}</Text>
+
+        {/* 리더 일때 아이콘 추가 */}
+        {isLeader ? <Image
+          style={styles.leaderIcon}
+          source={require('../../../assets/images/ic_leader.png')}/> : (<View/>)}
+
       </View>
     )
   }
@@ -39,7 +41,8 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   leaderIcon: {
-    paddingLeft: 10,
+    marginLeft: 8,
+    position: 'absolute'
   },
   profile: {
     width: 50,
