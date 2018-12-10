@@ -292,14 +292,14 @@ export default class Order extends Component {
             .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
           return <View>
             <Text style={styles.priceText}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액
-              : {numberCommaFormat(totalPrice)}원</Text>
+              : {numberCommaFormat(totalPrice, true)}원</Text>
           </View>;
 
         case 'split':
           const userCount = this.state.users.length;
           return <View>
             <Text style={styles.priceText}>총 {numberCommaFormat(total)}원
-              / {userCount}명 = {numberCommaFormat(total / userCount)}원</Text>
+              / {userCount}명 = {numberCommaFormat(total / userCount, true)}원</Text>
           </View>;
       }
     }
