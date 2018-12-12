@@ -9,6 +9,7 @@ export default class UserProfileListItem extends React.Component {
   render() {
     const hasAvatar = this.props.member.User.avatarUrl !== null;
     const isLeader = this.props.member.role === 'leader';
+    const isUserPurchased = this.props.member.isUserPurchased;
 
     return (
       <View style={styles.profileListWrapper}>
@@ -30,6 +31,9 @@ export default class UserProfileListItem extends React.Component {
           style={styles.leaderIcon}
           source={require('../../../assets/images/ic_leader.png')}/> : (<View/>)}
 
+        {isUserPurchased && <View>
+          <Text>나는결제함</Text>
+        </View>}
       </View>
     )
   }

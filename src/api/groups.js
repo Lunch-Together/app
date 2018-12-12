@@ -108,3 +108,14 @@ export const changeGroupPurchaseTypeToDutch = async (id) => {
     })
   })
 };
+
+export const purchase = async (id) => {
+  return await fetch(`${URL}/groups/${id}/purchase`, {
+    method: 'post',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await getAccessToken()}`
+    },
+  })
+}

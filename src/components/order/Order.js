@@ -28,6 +28,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import SheetList from "./sheet/SheetList";
 import { SecureStore } from "expo";
 import { numberCommaFormat } from "../../utils/NumberUtil";
+import { Actions } from "react-native-router-flux";
 
 
 export default class Order extends Component {
@@ -38,6 +39,7 @@ export default class Order extends Component {
     routes: [{ key: 'dummy' }],
     menus: [],
     orders: [],
+    purchases: [],
     preOrders: [],
     orderModalVisible: false,
   };
@@ -80,7 +82,7 @@ export default class Order extends Component {
 
     // 내가 참여하고 있는 그룹 상세 정보
     const group = await groupResponse.json();
-    const { Table, GroupMembers } = group.data;
+    const { Table, GroupMembers, GroupPurchases } = group.data;
     const { ShopId } = Table;
 
     // 상점 메뉴 정보
@@ -109,10 +111,23 @@ export default class Order extends Component {
     // 내 정보가 리더인지 아닌지를 저장한다
     const isLeader = groupMemberMe.length >= 1 && groupMemberMe[0].role === 'leader';
 
+    // 내가 이 그룹에서 결제를 했는지 데이터를 확인한다
+    const mePurchaseData = GroupPurchases.filter(purchase => purchase.UserId === me.id)[0];
+    const isPurchased = mePurchaseData != null && mePurchaseData.states === 'purchased';
+
     // 그룹 정보 적용
     this.setState({
       users: GroupMembers.map(item => {
-        return { key: `${item.id}`, ...item }
+
+        // 해당 유저의 결제 데이터 확인
+        const purchaseData = GroupPurchases.filter(purchase => item.UserId === purchase.UserId)[0];
+        const hasPurchaseData = purchaseData != null;
+
+        return {
+          key: `${item.id}`,
+          isUserPurchased: hasPurchaseData && purchaseData.states === 'purchased',
+          ...item
+        }
       }),
       menus: shopMenus.data,
       routes: shopMenus.data.map(category => {
@@ -121,6 +136,7 @@ export default class Order extends Component {
       orders: orders.data,
       group: meGroup.data,
       isLeader,
+      isPurchased,
       me
     });
 
@@ -159,6 +175,24 @@ export default class Order extends Component {
           <View style={styles.sendMyOrderBtn}>
             <TouchableOpacity activeOpacity={0.6} onPress={this._postOrders.bind(this)}>
               <Text style={{ color: '#fff', fontSize: 18 }}>내 주문 전송</Text>
+            </TouchableOpacity>
+          </View>
+          }
+
+          {/* 결제하기 버튼 -- 주문 진행 상태일떄 보일 수 있도록 설정 */}
+          {this.state.group && this.state.group.states === 'payment-in-progress' && !this.state.isPurchased &&
+          <View style={styles.sendMyOrderBtn}>
+            <TouchableOpacity activeOpacity={0.6} onPress={this._purchaseRequest.bind(this)}>
+              <Text style={{ color: '#fff', fontSize: 18 }}>결제하기</Text>
+            </TouchableOpacity>
+          </View>
+          }
+
+          {/* 결제 완료 버튼 -- 이미 결제를 완료한 경우 보여지는 버튼 */}
+          {this.state.group && this.state.group.states === 'payment-in-progress' && this.state.isPurchased &&
+          <View style={styles.sendMyOrderBtn}>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={{ color: '#fff', fontSize: 18 }}>결제완료</Text>
             </TouchableOpacity>
           </View>
           }
@@ -352,7 +386,14 @@ export default class Order extends Component {
           break;
 
         case 'archived':
-
+          Alert.alert(
+            '알림',
+            '모든 사람이 결제했기 때문에 이 그룹은 종료됩니다',
+            [
+              { text: '예', onPress: () => Actions.reset('welcome') }
+            ],
+            { cancelable: false }
+          );
           break;
       }
       this.setState({ group: { ...this.state.group, states: states.data } });
@@ -361,6 +402,20 @@ export default class Order extends Component {
     // 그룹에 결제 방법이 변경 되었을때
     this.socket.on('update-group-paymentType', (paymentType) => {
       this.setState({ group: { ...this.state.group, paymentType: paymentType.data } });
+    });
+
+    // 그룹에 결제 정보가 업데이트 되었을때
+    this.socket.on('update-group-purchase', (groupPurchase) => {
+      const { data } = groupPurchase;
+
+      const target = this.state.users.filter(user => user.UserId === data.UserId)[0];
+      target.isUserPurchased = data.states === 'purchased';
+
+      // 내가 이 그룹에서 결제를 했는지 데이터를 확인한다
+      const mePurchaseData = this.state.users.filter(user => user.UserId === this.state.me.id)[0];
+      const isPurchased = mePurchaseData != null && mePurchaseData.isUserPurchased;
+
+      this.setState({ users: this.state.users, isPurchased });
     });
 
     // 방에 접속하면 조인을 요청한다
@@ -519,6 +574,39 @@ export default class Order extends Component {
       Alert.alert('알림', '결제 방법 변경에 실패하였습니다');
       return;
     }
+  }
+
+  /**
+   * 결제 하기 요청
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _purchaseRequest() {
+    Alert.alert(
+      '알림',
+      '정말로 결제하시겠습니까?',
+      [
+        {
+          text: '아니요',
+          style: 'cancel',
+          onPress: () => {
+          }
+        },
+        { text: '예', onPress: () => this._purchase() }
+      ],
+      { cancelable: false }
+    );
+  }
+
+  /**
+   * 결제
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _purchase() {
+    await groupApi.purchase(this.state.groupId);
   }
 
   /**
