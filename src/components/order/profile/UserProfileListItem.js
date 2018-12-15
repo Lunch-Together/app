@@ -31,8 +31,9 @@ export default class UserProfileListItem extends React.Component {
           style={styles.leaderIcon}
           source={require('../../../assets/images/ic_leader.png')}/> : (<View/>)}
 
-        {isUserPurchased && <View>
-          <Text>나는결제함</Text>
+        {isUserPurchased && <View
+          style={styles.userPurchasedGroup}>
+          <Text style={styles.userPurchasedText}>결제완료</Text>
         </View>}
       </View>
     )
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
   },
   leaderIcon: {
     marginLeft: 8,
+    zIndex: 2,
     position: 'absolute'
   },
   profile: {
@@ -69,5 +71,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
     opacity: 0.7,
     textAlign: 'center'
+  },
+  userPurchasedGroup: {
+    width: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    left: 8,
+    zIndex: 0,
+    height: 50,
+    position: 'absolute'
+  },
+  userPurchasedText: {
+    color: '#FFF',
+    top: 22,
+    marginLeft: 8,
+    marginRight: 8,
+    borderRadius: 24,
+    zIndex: 3,
+    backgroundColor: '#FC5B26',
+    fontSize: 10,
+    textAlign: 'center',
+    alignContent: 'center'
   }
 });
