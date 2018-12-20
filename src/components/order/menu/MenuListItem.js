@@ -20,19 +20,21 @@ export default class MenuListItem extends React.Component {
         <View style={styles.content}>
           <Text style={styles.name}>{this.props.menu.name}</Text>
           <Text style={styles.desc}>{this.props.menu.description}</Text>
-          <View style={styles.directionRow}>
-            <TouchableOpacity activeOpacity={0.6} onPress={this.minusAmount.bind(this)} style={styles.countButton}>
-              <Text style={styles.amountButton}>-</Text>
-            </TouchableOpacity>
-            <View style={styles.countGroup}>
-              <Text style={styles.count}>{this.state.amount}</Text>
+          <View style={styles.bottomWrapper}>
+            <View style={styles.directionRow}>
+              <TouchableOpacity activeOpacity={0.6} onPress={this.minusAmount.bind(this)} style={styles.countButton}>
+                <Text style={styles.amountButton}>-</Text>
+              </TouchableOpacity>
+              <View style={styles.countGroup}>
+                <Text style={styles.count}>{this.state.amount}</Text>
+              </View>
+              <TouchableOpacity activeOpacity={0.6} onPress={this.plusAmount.bind(this)} style={styles.countButton}>
+                <Text style={styles.amountButton}>+</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity activeOpacity={0.6} onPress={this.plusAmount.bind(this)} style={styles.countButton}>
-              <Text style={styles.amountButton}>+</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.priceGroup}>
-            <Text style={styles.price}>{numberCommaFormat(this.props.menu.price)}원</Text>
+            <View style={styles.priceGroup}>
+              <Text style={styles.price}>{numberCommaFormat(this.props.menu.price)}원</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -74,6 +76,12 @@ const styles = StyleSheet.create({
   content: {
     marginLeft: 15,
     flex: 2,
+    position: 'relative',
+  },
+  bottomWrapper: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
   },
   countGroup: {
     borderTopWidth: 1,
