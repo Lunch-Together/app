@@ -10,7 +10,9 @@ export default class AppButton extends React.Component {
       <View {...this.props.style}>
         <TouchableOpacity activeOpacity={0.6} onPress={this.props.onPress}>
           <View style={this.props.type === 'orange' ? styles.orangeBtn : styles.whiteBtn}>
-            <Image soruce={this.props.icon}/>
+            <View style={{flex: 1}}>
+              <Image source={this.props.icon}/>
+            </View>
             <Text
               style={this.props.type === 'orange' ? styles.orangeBtnText : styles.whiteBtnText}>{this.props.name}</Text>
           </View>
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
   },
 
   whiteBtn: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   whiteBtnText: {
+    flex: 2,
     color: '#676767',
   }
 });

@@ -15,7 +15,7 @@ export default class Welcome extends React.Component {
   async componentDidMount() {
     const token = await SecureStore.getItemAsync('token');
 
-    // SecureStore.deleteItemAsync('token')
+    SecureStore.deleteItemAsync('token')
 
     // Token이 없을 경우에 로그인 페이지로 이동
     if (!token) {
