@@ -8,8 +8,8 @@ import {
   Alert,
   Dimensions,
   FlatList,
-  Modal,
   Image,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -24,8 +24,6 @@ import * as shopApi from '../../api/shop'
 import SocketIOClient from 'socket.io-client'
 import { getAccessToken, URL } from '../../api/constants'
 import MenuList from './menu/MenuList'
-import ActionButton from 'react-native-action-button'
-import Icon from 'react-native-vector-icons/Ionicons'
 import SheetList from "./sheet/SheetList";
 import { SecureStore } from "expo";
 import { numberCommaFormat } from "../../utils/NumberUtil";
@@ -176,7 +174,7 @@ export default class Order extends Component {
           {this.state.group && this.state.group.states === 'ongoing' &&
           <View style={styles.sendMyOrderBtn}>
             <TouchableOpacity activeOpacity={0.6} onPress={this._postOrders.bind(this)}>
-              <Text style={{ color: '#fff', fontSize: 18 }}>내 주문 전송</Text>
+              <Text allowFontScaling={false} style={{ color: '#fff', fontSize: 14 }}>내 주문 전송</Text>
             </TouchableOpacity>
           </View>
           }
@@ -185,7 +183,7 @@ export default class Order extends Component {
           {this.state.group && this.state.group.states === 'payment-in-progress' && !this.state.isPurchased &&
           <View style={styles.sendMyOrderBtn}>
             <TouchableOpacity activeOpacity={0.6} onPress={this._purchaseRequest.bind(this)}>
-              <Text style={{ color: '#fff', fontSize: 18 }}>결제하기</Text>
+              <Text allowFontScaling={false} style={{ color: '#fff', fontSize: 14 }}>결제하기</Text>
             </TouchableOpacity>
           </View>
           }
@@ -194,7 +192,7 @@ export default class Order extends Component {
           {this.state.group && this.state.group.states === 'payment-in-progress' && this.state.isPurchased &&
           <View style={styles.sendMyOrderBtn}>
             <TouchableOpacity activeOpacity={0.6}>
-              <Text style={{ color: '#fff', fontSize: 18 }}>결제완료</Text>
+              <Text allowFontScaling={false} style={{ color: '#fff', fontSize: 14 }}>결제완료</Text>
             </TouchableOpacity>
           </View>
           }
@@ -206,7 +204,7 @@ export default class Order extends Component {
                 this.setModalVisibility(!this.state.orderModalVisible);
               }}
               activeOpacity={0.6}>
-              <Text style={{ color: '#fff', fontSize: 18 }}>주문서</Text>
+              <Text allowFontScaling={false} style={{ color: '#fff', fontSize: 14 }}>주문서</Text>
             </TouchableOpacity>
 
             <Modal
@@ -252,25 +250,25 @@ export default class Order extends Component {
                 }
 
                 {this.state.orderStateModalVisible === true &&
-                  <View
-                    style={styles.orderStateModalWrapper}
-                  >
-                    <View style={styles.orderStateBtnWrapper}>
-                      <View style={styles.changeOrderStateBtn}>
-                        <TouchableOpacity onPress={() => this._requestGroupChangePurchaseType('dutch')}>
-                          <Text style={{fontSize: 18}}>내 주문 계산</Text>
-                        </TouchableOpacity>
-                      </View>
-                      <View style={styles.changeOrderStateBtn}>
-                        <TouchableOpacity onPress={() => this._requestGroupChangePurchaseType('split')}>
-                          <Text style={{fontSize: 18}}>1 / N 계산</Text>
-                        </TouchableOpacity>
-                      </View>
-                      <TouchableOpacity onPress={() => this.setChangeOrderStateModalVisibility(!this.state.orderStateModalVisible)}>
-                        <Image style={styles.changeOrderStateBtnCancel} source={require('../../assets/images/ic_cancel_white.png')}/>
+                <View style={styles.orderStateModalWrapper}>
+                  <View style={styles.orderStateBtnWrapper}>
+                    <View style={styles.changeOrderStateBtn}>
+                      <TouchableOpacity onPress={() => this._requestGroupChangePurchaseType('dutch')}>
+                        <Text style={{ fontSize: 18 }}>내 주문 계산</Text>
                       </TouchableOpacity>
                     </View>
+                    <View style={styles.changeOrderStateBtn}>
+                      <TouchableOpacity onPress={() => this._requestGroupChangePurchaseType('split')}>
+                        <Text style={{ fontSize: 18 }}>1 / N 계산</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => this.setChangeOrderStateModalVisibility(!this.state.orderStateModalVisible)}>
+                      <Image style={styles.changeOrderStateBtnCancel}
+                             source={require('../../assets/images/ic_cancel_white.png')}/>
+                    </TouchableOpacity>
                   </View>
+                </View>
                 }
               </SafeAreaView>
             </Modal>
@@ -334,11 +332,11 @@ export default class Order extends Component {
             .map(order => order.Menu.price)
             .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
           return <View style={styles.priceWrapper}>
-              <Text style={styles.priceWrapper}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액</Text>
-              <View style={styles.divison}>
-                <Image source={require('../../assets/images/ic_result.png')}/>
-              </View>
-              <Text style={styles.totalPrice}>{numberCommaFormat(totalPrice, true)}원</Text>
+            <Text style={styles.priceWrapper}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액</Text>
+            <View style={styles.divison}>
+              <Image source={require('../../assets/images/ic_result.png')}/>
+            </View>
+            <Text style={styles.totalPrice}>{numberCommaFormat(totalPrice, true)}원</Text>
           </View>;
 
         case 'split':
