@@ -771,7 +771,7 @@ const styles = StyleSheet.create({
   orderStateBtnWrapper: {
     position: 'absolute', left: 0, right: 0,
     alignItems: 'center',
-    bottom: 70,
+    bottom: 90,
   },
   changeOrderStateBtn: {
     padding: 10,
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
   },
   orderStateModalWrapper: {
     position: 'absolute',
-    top: 0,
+    bottom: 0,
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
