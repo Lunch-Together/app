@@ -43,6 +43,7 @@ export default class Order extends Component {
     purchases: [],
     preOrders: [],
     orderModalVisible: false,
+    orderStateModalVisible: false,
   };
 
   constructor(props) {
@@ -226,7 +227,7 @@ export default class Order extends Component {
                       activeOpacity={0.6}
                       style={{ flex: 1 }}>
                       <View>
-                        <Text>닫기</Text>
+                        <Image source={require('../../assets/images/ic_cancel.png')}/>
                       </View>
                     </TouchableOpacity>
                     <Text style={styles.orderNavTitle}>주문서</Text>
@@ -237,32 +238,39 @@ export default class Order extends Component {
                 {/* 주문서 리스트 */}
                 <SheetList orders={this.state.orders} style={{ marginBottom: 110 }}/>
 
-                {/* 계산 방식을 변경하는 버튼 (리더 권한을 가지고 있고 결제 요청 전에만 볼 수 있음) */}
-                {this.state.isLeader && this.state.group && this.state.group.states === 'ongoing' &&
-                <ActionButton buttonColor="#494949" style={{ marginBottom: 44 }}>
-                  <ActionButton.Item
-                    buttonColor="#9b59b6"
-                    title="내 주문 계산"
-                    onPress={() => this._requestGroupChangePurchaseType('dutch')}>
-                    <Icon name="md-create" style={styles.actionButtonIcon}/>
-                  </ActionButton.Item>
-                  <ActionButton.Item
-                    buttonColor="#3498db"
-                    onPress={() => this._requestGroupChangePurchaseType('split')}
-                    title="1/N 계산">
-                    <Icon
-                      name="md-notifications-off"
-                      style={styles.actionButtonIcon}/>
-                  </ActionButton.Item>
-                </ActionButton>
-                }
-
                 {/* 상태를 변경하는 버튼 (리더 권한을 가지고 있고 결제 요청 전에만 볼 수 있음) */}
                 {this.state.isLeader && this.state.group && this.state.group.states === 'ongoing' &&
-                <TouchableOpacity activeOpacity={0.9} onPress={this._requestGroupToProgressInPurchase.bind(this)}
-                                  style={styles.requestOrderBtn}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => {
+                    this.setChangeOrderStateModalVisibility(!this.state.orderStateModalVisible);
+                  }}
+                  style={styles.requestOrderBtn}
+                >
                   <Text style={styles.requestOrderBtnText}>결제요청</Text>
                 </TouchableOpacity>
+                }
+
+                {this.state.orderStateModalVisible === true &&
+                  <View
+                    style={styles.orderStateModalWrapper}
+                  >
+                    <View style={styles.orderStateBtnWrapper}>
+                      <View style={styles.changeOrderStateBtn}>
+                        <TouchableOpacity onPress={() => this._requestGroupChangePurchaseType('dutch')}>
+                          <Text style={{fontSize: 18}}>내 주문 계산</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.changeOrderStateBtn}>
+                        <TouchableOpacity onPress={() => this._requestGroupChangePurchaseType('split')}>
+                          <Text style={{fontSize: 18}}>1 / N 계산</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <TouchableOpacity onPress={() => this.setChangeOrderStateModalVisibility(!this.state.orderStateModalVisible)}>
+                        <Image style={styles.changeOrderStateBtnCancel} source={require('../../assets/images/ic_cancel_white.png')}/>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 }
               </SafeAreaView>
             </Modal>
@@ -552,7 +560,7 @@ export default class Order extends Component {
   async _requestGroupChangePurchaseType(paymentType) {
     Alert.alert(
       '알림',
-      '정말로 결제 방법을 변경하시겠습니까?',
+      '결제 방법을 변경하시겠습니까?',
       [
         { text: '아니요', onPress: () => console.log('Canceled'), style: 'cancel' },
         { text: '예', onPress: () => this._groupChangePurchaseType(paymentType) }
@@ -570,6 +578,11 @@ export default class Order extends Component {
    */
   async _groupChangePurchaseType(paymentType) {
     let response;
+
+    // 모달을 닫아준다
+    this.setChangeOrderStateModalVisibility(!this.state.orderStateModalVisible);
+    this.setModalVisibility(!this.state.orderModalVisible);
+
     switch (paymentType) {
       case 'split':
         response = await groupApi.changeGroupPurchaseTypeToSplit(this.state.groupId);
@@ -584,6 +597,8 @@ export default class Order extends Component {
       Alert.alert('알림', '결제 방법 변경에 실패하였습니다');
       return;
     }
+
+    this._groupToProgressInPurchase();
   }
 
   /**
@@ -627,6 +642,16 @@ export default class Order extends Component {
   setModalVisibility(visible) {
     this.setState({ orderModalVisible: visible });
   }
+
+  /**
+   * 주문하기 결제방식 모달 변경
+   *
+   */
+
+  setChangeOrderStateModalVisibility(visible) {
+    this.setState({ orderStateModalVisible: visible });
+  }
+
 }
 
 const styles = StyleSheet.create({
@@ -744,5 +769,33 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.8,
     fontSize: 14,
+  },
+  orderStateBtnWrapper: {
+    position: 'absolute', left: 0, right: 0,
+    alignItems: 'center',
+    bottom: 70,
+  },
+  changeOrderStateBtn: {
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    marginTop: 25,
+    textAlign: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#fff',
+    borderWidth: 5,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  changeOrderStateBtnCancel: {
+    marginTop: 25,
+  },
+  orderStateModalWrapper: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   }
 });

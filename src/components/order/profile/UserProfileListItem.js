@@ -82,7 +82,9 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   userPurchasedGroupImage: {
-    justifyContent: 'center',
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: '30%'
   },
   userPurchasedText: {
     color: '#FFF',
