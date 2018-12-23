@@ -600,6 +600,8 @@ export default class Order extends Component {
       Alert.alert('알림', '결제 방법 변경에 실패하였습니다');
       return;
     }
+
+    this._groupToProgressInPurchase();
   }
 
   /**
