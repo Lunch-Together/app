@@ -333,9 +333,12 @@ export default class Order extends Component {
           const totalPrice = this.state.orders.filter(order => order.UserId === this.state.me.id)
             .map(order => order.Menu.price)
             .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-          return <View>
-            <Text style={styles.priceWrapper}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액
-              : {numberCommaFormat(totalPrice, true)}원</Text>
+          return <View style={styles.priceWrapper}>
+              <Text style={styles.priceWrapper}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액</Text>
+              <View style={styles.divison}>
+                <Image source={require('../../assets/images/ic_result.png')}/>
+              </View>
+              <Text style={styles.totalPrice}>{numberCommaFormat(totalPrice, true)}원</Text>
           </View>;
 
         case 'split':
