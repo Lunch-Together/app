@@ -33,7 +33,7 @@ export default class UserProfileListItem extends React.Component {
 
         {isUserPurchased && <View
           style={styles.userPurchasedGroup}>
-          <Text style={styles.userPurchasedText}>결제완료</Text>
+          <Image style={styles.userPurchasedGroupImage} source={require('../../../assets/images/img_complete.png')}/>
         </View>}
       </View>
     )
@@ -80,6 +80,9 @@ const styles = StyleSheet.create({
     zIndex: 0,
     height: 50,
     position: 'absolute'
+  },
+  userPurchasedGroupImage: {
+    justifyContent: 'center',
   },
   userPurchasedText: {
     color: '#FFF',

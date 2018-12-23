@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { numberCommaFormat } from "../../../utils/NumberUtil";
+import { numberCommaFormat } from '../../../utils/NumberUtil'
 
 export default class SheetListItem extends React.Component {
 
@@ -35,6 +35,7 @@ export default class SheetListItem extends React.Component {
     const hasAvatar = this.state.user && this.state.user.avatarUrl !== null;
 
     return <View style={styles.othersOrderTableWrapper}>
+      <Text style={styles.ordersTitle}>다른 멤버가 주문한 메뉴</Text>
       <View style={styles.ordersProfileWrapper}>
         {hasAvatar ? (
           <Image
@@ -71,10 +72,10 @@ export default class SheetListItem extends React.Component {
 
 const styles = StyleSheet.create({
   othersOrderTableWrapper: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    paddingRight: 15
+    padding: 30
+  },
+  ordersTitle: {
+    fontSize: 22, color: '#494949', fontWeight: 'bold',
   },
   ordersProfileName: {
     marginLeft: 15, fontSize: 15,

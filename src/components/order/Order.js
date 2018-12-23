@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   Modal,
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -325,15 +326,24 @@ export default class Order extends Component {
             .map(order => order.Menu.price)
             .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
           return <View>
-            <Text style={styles.priceText}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액
+            <Text style={styles.priceWrapper}>총 {numberCommaFormat(total)}원 중 내가 주문한 금액
               : {numberCommaFormat(totalPrice, true)}원</Text>
           </View>;
 
         case 'split':
           const userCount = this.state.users.length;
           return <View>
-            <Text style={styles.priceText}>총 {numberCommaFormat(total)}원
-              / {userCount}명 = {numberCommaFormat(total / userCount, true)}원</Text>
+            <View style={styles.priceWrapper}>
+              <Text style={styles.colorWhiteGray}>총 {numberCommaFormat(total)}원</Text>
+              <View style={styles.divison}>
+                <Image source={require('../../assets/images/ic_division.png')}/>
+              </View>
+              <Text style={styles.colorWhiteGray}>{userCount}명</Text>
+              <View style={styles.divison}>
+                <Image source={require('../../assets/images/ic_result.png')}/>
+              </View>
+              <Text style={styles.totalPrice}>{numberCommaFormat(total / userCount, true)}원</Text>
+            </View>
           </View>;
       }
     }
@@ -658,8 +668,16 @@ const styles = StyleSheet.create({
     height: 51,
     justifyContent: 'center'
   },
-  priceText: {
+  priceWrapper: {
+    flexDirection: 'row',
+    textAlign: 'right',
+    justifyContent: 'flex-end',
+    fontSize: 13,
     color: '#fff',
+  },
+  priceText: {
+    color: '#FFFFFF',
+    opacity: 0.8,
     textAlign: 'right'
   },
   fixedBtnWrapper: {
@@ -713,5 +731,18 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     textAlign: 'center',
+  },
+  divison: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  totalPrice: {
+    color: '#FFF662',
+    fontSize: 14,
+  },
+  colorWhiteGray: {
+    color: '#fff',
+    opacity: 0.8,
+    fontSize: 14,
   }
 });
