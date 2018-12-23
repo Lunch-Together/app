@@ -547,7 +547,6 @@ export default class Order extends Component {
     const changeResponse = await groupApi.changeGroupToPurchas(this.state.groupId);
     if (changeResponse.ok !== true) {
       Alert.alert('알림', '상태 변경에 실패하였습니다');
-      return
     }
   }
 
@@ -561,7 +560,7 @@ export default class Order extends Component {
   async _requestGroupChangePurchaseType(paymentType) {
     Alert.alert(
       '알림',
-      '결제 방법을 변경하시겠습니까?',
+      '정말로 결제 요청 상태로 변경하시겠습니까?\n더 이상 주문을 추가할 수 없습니다',
       [
         { text: '아니요', onPress: () => console.log('Canceled'), style: 'cancel' },
         { text: '예', onPress: () => this._groupChangePurchaseType(paymentType) }
@@ -599,7 +598,8 @@ export default class Order extends Component {
       return;
     }
 
-    this._groupToProgressInPurchase();
+    // 그룹 결제 방식이 변경되면 바로 결제 요청 처리 해버린다
+    await this._groupToProgressInPurchase();
   }
 
   /**
